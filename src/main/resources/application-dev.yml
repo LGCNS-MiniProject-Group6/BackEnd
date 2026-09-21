@@ -1,0 +1,82 @@
+server:
+  port: 8000
+
+
+spring:
+  application:
+    name: inspire_jpa
+
+  # spring mvc view path 
+  # mvc:
+  #   view:
+  #     prefix: /WEB-INF/view/
+  #     suffix: .jsp
+
+  config:
+    activate:
+      on-profile: dev
+    
+
+  # mariadb settingh
+  datasource:
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  # jpa
+  jpa:
+    hibernate:
+      # dto X, entity(table) -> auto generator(table)
+      # create, create-drop, update, none
+      ddl-auto: none
+
+    # 콘솔출력
+    show-sql: true 
+    properties:
+      hibernate:
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+        # example(h2)
+        # h2
+        # dialect: org.hibernate.dialect.H2Dialect 
+
+        # mariadb
+        dialect: org.hibernate.dialect.MariaDBDialect 
+        format_sql: true 
+  data:
+    # redis 환경정보 설정 
+    # -> docker : image(docker hub)를 만들고 -> container 실행
+    # docker run -d --name redis-container -p 6379:6379 redis:7.2
+    # docker exec -it redis-container redis-cli
+
+    # ui tools 
+    # docker run -d --name redis-insight -p 8001:5540 redis/redisinsight:latest
+    # http://localhost:8001
+    # host: host.docker.internal, redis
+    redis: 
+      host: localhost
+      port: 6379
+      password:
+      timeout: 6000ms
+  ai:
+    openai:
+      api-key: ${OPEN_AI_KEY}
+      chat:
+        options:
+          model: ${OPEN_AI_MODEL}
+
+
+# mybatis:
+#   mapper-locations: classpath:/mappers/**/*Mapper.xml
+  # type-aliases-package: com.example.testcase
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+
+# OPENAPI
+openapi:
+  serviceKey: ${OPENAPI_SERVICE_KEY}
+  callBackUrl: ${OPENAPI_CALLBACKURL} 
+  dataType: ${OPENAPI_TYPE}
