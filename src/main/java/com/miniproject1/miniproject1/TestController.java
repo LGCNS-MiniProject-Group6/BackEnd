@@ -1,5 +1,7 @@
 package com.miniproject1.miniproject1;
 
+import com.miniproject1.miniproject1.commons.exception.BusinessException;
+import com.miniproject1.miniproject1.commons.exception.ErrorCode;
 import com.miniproject1.miniproject1.commons.token.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +18,7 @@ import java.util.Map;
  */
 @Tag(name = "00. Config Test", description = "기본 설정 및 JWT 동작 확인용 API")
 @RestController
-@RequestMapping("/api/v1/test")
+// @RequestMapping 지우거나 비워두기!
 @RequiredArgsConstructor
 public class TestController {
 
@@ -42,5 +44,10 @@ public class TestController {
                 "message", "인증에 성공했습니다!",
                 "userEmail", authentication.getName(),
                 "authorities", authentication.getAuthorities()));
+    }
+
+    @GetMapping("/test/error")
+    public void testError() {
+        throw new BusinessException(ErrorCode.DATA_NOT_FOUND, "사업정보를 찾을 수 없습니다.");
     }
 }
