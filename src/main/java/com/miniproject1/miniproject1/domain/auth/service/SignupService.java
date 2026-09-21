@@ -8,16 +8,14 @@ import com.miniproject1.miniproject1.commons.exception.BusinessException;
 import com.miniproject1.miniproject1.commons.exception.ErrorCode;
 import com.miniproject1.miniproject1.domain.auth.dto.SignupRequestDTO;
 import com.miniproject1.miniproject1.domain.auth.dto.SignupResponseDTO;
-import com.miniproject1.miniproject1.domain.user.entity.User;
-import com.miniproject1.miniproject1.domain.user.repository.UserRepository;
+import com.miniproject1.miniproject1.domain.auth.entity.User;
+import com.miniproject1.miniproject1.domain.auth.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
-
-    private static final String DEFAULT_ROLE = "USER";
+public class SignupService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -33,7 +31,6 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .phoneNumber(request.getPhone())
-                .role(DEFAULT_ROLE)
                 .build();
 
         User saved = userRepository.save(user);

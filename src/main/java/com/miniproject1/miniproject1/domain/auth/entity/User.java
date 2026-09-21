@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.domain.user.entity;
+package com.miniproject1.miniproject1.domain.auth.entity;
 
 import java.time.LocalDateTime;
 
@@ -32,9 +32,6 @@ public class User {
     @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;
 
-    @Column(nullable = false, length = 20)
-    private String role;
-
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -42,12 +39,11 @@ public class User {
     private LocalDateTime updatedAt;
 
     @Builder
-    private User(String email, String password, String name, String phoneNumber, String role) {
+    private User(String email, String password, String name, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.role = role;
     }
 
     @PrePersist
