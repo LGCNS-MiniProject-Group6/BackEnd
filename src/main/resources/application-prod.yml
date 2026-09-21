@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    # 운영 환경에서는 DDL 자동 변경을 방지하기 위해 validate 또는 none 권장
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        "[format_sql]": false
+        "[default_batch_fetch_size]": 100
+    open-in-view: false
+
+logging:
+  level:
+    root: INFO
+    com.miniproject1: INFO
