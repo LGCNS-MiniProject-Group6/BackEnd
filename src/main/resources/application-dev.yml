@@ -80,3 +80,12 @@ openapi:
   serviceKey: ${OPENAPI_SERVICE_KEY}
   callBackUrl: ${OPENAPI_CALLBACKURL} 
   dataType: ${OPENAPI_TYPE}
+  
+  
+  
+coolsms:
+  api:
+    coolSmsUrl: ${COOLSMS_URL}
+    coolSmsKey: ${COOLSMS_API_KEY}
+    coolSmsSecret: ${COOLSMS_API_SECRET}
+    coolSmsNumber: ${COOLSMS_SENDER_NUMBER}
