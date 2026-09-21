@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.user.dto.logout;
+package com.miniproject1.miniproject1.auth.dto.logout;
 
 import jakarta.validation.constraints.NotBlank;
 

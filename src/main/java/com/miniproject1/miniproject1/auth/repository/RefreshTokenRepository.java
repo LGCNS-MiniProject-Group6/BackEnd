@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.user.repository;
+package com.miniproject1.miniproject1.auth.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

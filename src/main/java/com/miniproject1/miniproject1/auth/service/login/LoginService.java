@@ -1,11 +1,11 @@
-package com.miniproject1.miniproject1.user.service.login;
+package com.miniproject1.miniproject1.auth.service.login;
 
 import com.miniproject1.miniproject1.commons.exception.BusinessException;
 import com.miniproject1.miniproject1.commons.exception.ErrorCode;
 import com.miniproject1.miniproject1.commons.token.JwtTokenProvider;
-import com.miniproject1.miniproject1.user.dto.login.LoginRequest;
-import com.miniproject1.miniproject1.user.dto.login.LoginResponse;
-import com.miniproject1.miniproject1.user.repository.RefreshTokenRepository;
+import com.miniproject1.miniproject1.auth.dto.login.LoginRequest;
+import com.miniproject1.miniproject1.auth.dto.login.LoginResponse;
+import com.miniproject1.miniproject1.auth.repository.RefreshTokenRepository;
 import com.miniproject1.miniproject1.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.user;
+package com.miniproject1.miniproject1.auth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

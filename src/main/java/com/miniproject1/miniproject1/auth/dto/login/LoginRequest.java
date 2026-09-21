@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.user.dto.login;
+package com.miniproject1.miniproject1.auth.dto.login;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

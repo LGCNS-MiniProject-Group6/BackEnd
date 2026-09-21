@@ -1,10 +1,10 @@
-package com.miniproject1.miniproject1.user.service.logout;
+package com.miniproject1.miniproject1.auth.service.logout;
 
 import com.miniproject1.miniproject1.commons.exception.BusinessException;
 import com.miniproject1.miniproject1.commons.exception.ErrorCode;
 import com.miniproject1.miniproject1.commons.token.JwtTokenProvider;
-import com.miniproject1.miniproject1.user.dto.logout.LogoutRequest;
-import com.miniproject1.miniproject1.user.repository.RefreshTokenRepository;
+import com.miniproject1.miniproject1.auth.dto.logout.LogoutRequest;
+import com.miniproject1.miniproject1.auth.repository.RefreshTokenRepository;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

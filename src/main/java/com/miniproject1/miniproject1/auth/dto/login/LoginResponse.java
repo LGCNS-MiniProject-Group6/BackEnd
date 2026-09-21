@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.user.dto.login;
+package com.miniproject1.miniproject1.auth.dto.login;
 
 public record LoginResponse(
         String accessToken,

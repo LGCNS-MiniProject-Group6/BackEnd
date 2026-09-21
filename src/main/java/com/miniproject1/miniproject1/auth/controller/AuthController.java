@@ -1,10 +1,10 @@
-package com.miniproject1.miniproject1.user.controller;
+package com.miniproject1.miniproject1.auth.controller;
 
-import com.miniproject1.miniproject1.user.dto.login.LoginRequest;
-import com.miniproject1.miniproject1.user.dto.login.LoginResponse;
-import com.miniproject1.miniproject1.user.dto.logout.LogoutRequest;
-import com.miniproject1.miniproject1.user.service.login.LoginService;
-import com.miniproject1.miniproject1.user.service.logout.LogoutService;
+import com.miniproject1.miniproject1.auth.dto.login.LoginRequest;
+import com.miniproject1.miniproject1.auth.dto.login.LoginResponse;
+import com.miniproject1.miniproject1.auth.dto.logout.LogoutRequest;
+import com.miniproject1.miniproject1.auth.service.login.LoginService;
+import com.miniproject1.miniproject1.auth.service.logout.LogoutService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class UserController {
+public class AuthController {
 
     private final LoginService loginService;
     private final LogoutService logoutService;
