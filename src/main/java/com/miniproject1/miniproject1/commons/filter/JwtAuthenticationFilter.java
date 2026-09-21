@@ -34,11 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private Key key;
 
     // JWT 인증을 거치지 않을 화이트리스트 URL 목록
-    // 코딩하면서 수정 진행
     private static final List<String> WHITE_LIST = List.of(
             "/auth/**",
             "/token",
-            "/test/**",
             "/swagger-ui/**",
             "/v3/api-docs/**");
 
@@ -90,24 +88,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = header.substring(7);
 
         try {
-            // 5. 토큰 파싱 및 서명 검증 (유효하지 않거나 만료된 경우 Exception 발생)
+            // 5. 토큰 파싱 및 서명 검증
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
 
-            // 6. Claims에서 정보(사용자 이메일 및 권한) 추출
+            // 6. Claims에서 이메일 추출
             String email = claims.getSubject();
-            String role = claims.get("role", String.class);
 
-            // 7. Security Context에 저장할 Authentication 객체 생성
+            // 7. Security Context에 저장할 Authentication 객체 생성 (권한은 빈 리스트)
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     email,
                     null,
-                    role != null ? List.of(() -> "ROLE_" + role) : List.of());
+                    List.of());
 
-            // 8. 요청의 세부 정보(IP, Session ID 등)를 인증 객체에 설정
+            // 8. 요청의 세부 정보 설정
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             // 9. SecurityContextHolder에 인증 객체 등록

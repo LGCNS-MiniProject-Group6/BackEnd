@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
@@ -18,16 +19,25 @@ public class JwtTokenProvider {
 
     private Key key;
 
-    // 만료시간 (Access Token: 30분 / Refresh Token: 7일)
-    private final long accessTokenValidTime = 1000L * 60 * 30;
-    private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7;
+    @Value("${jwt.access-token-expires-in:3600}")
+    private long accessTokenExpiresIn;
 
-    public long getRefreshTokenExpirationTime() {
-        return refreshTokenValidTime;
+    @Value("${jwt.refresh-token-expires-in:1209600}")
+    private long refreshTokenExpiresIn;
+
+    public long getAccessTokenExpiresIn() {
+        return accessTokenExpiresIn;
+    }
+
+    public long getRefreshTokenExpiresIn() {
+        return refreshTokenExpiresIn;
     }
 
     @PostConstruct
     protected void init() {
+        if (accessTokenExpiresIn <= 0 || refreshTokenExpiresIn <= 0) {
+            throw new IllegalArgumentException("Token lifetimes must be positive");
+        }
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -39,8 +49,9 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(UUID.randomUUID().toString())
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + accessTokenValidTime))
+                .setExpiration(new Date(now.getTime() + accessTokenExpiresIn * 1000L))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -48,15 +59,46 @@ public class JwtTokenProvider {
     // 2. Refresh Token 생성
     public String createRefreshToken(String email) {
         Claims claims = Jwts.claims().setSubject(email);
+        claims.put("tokenType", "refresh");
 
         Date now = new Date();
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(UUID.randomUUID().toString())
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
+                .setExpiration(new Date(now.getTime() + refreshTokenExpiresIn * 1000L))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public Claims parseAccessToken(String token) {
+        Claims claims = parse(token);
+        validateTokenType(claims, "access");
+        return claims;
+    }
+
+    public Claims parseRefreshToken(String token) {
+        Claims claims = parse(token);
+        validateTokenType(claims, "refresh");
+        return claims;
+    }
+
+    private Claims parse(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private void validateTokenType(Claims claims, String expectedType) {
+        if (!expectedType.equals(claims.get("tokenType", String.class))
+                || claims.getSubject() == null
+                || claims.getSubject().isBlank()
+                || claims.getExpiration() == null) {
+            throw new JwtException("Invalid " + expectedType + " token");
+        }
     }
 
     // 3. 토큰에서 사용자 이메일 추출

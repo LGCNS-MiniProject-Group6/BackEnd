@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.auth.service;
+package com.miniproject1.miniproject1.auth.service.sms;
 
 import com.miniproject1.miniproject1.commons.exception.BusinessException;
 import com.miniproject1.miniproject1.commons.exception.ErrorCode;
