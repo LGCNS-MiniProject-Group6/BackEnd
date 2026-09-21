@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.auth.dto;
+package com.miniproject1.miniproject1.auth.dto.Token;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

@@ -2,7 +2,6 @@ package com.miniproject1.miniproject1;
 
 import com.miniproject1.miniproject1.auth.dto.Token.TokenRequestDTO;
 import com.miniproject1.miniproject1.auth.dto.Token.TokenResponseDTO;
-import com.miniproject1.miniproject1.auth.service.AuthService;
 import com.miniproject1.miniproject1.auth.service.sms.SmsService;
 import com.miniproject1.miniproject1.auth.service.token.TokenService;
 import com.miniproject1.miniproject1.commons.exception.BusinessException;
@@ -30,7 +29,6 @@ public class TestController {
 
     private final SmsService smsService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final AuthService authService;
     private final TokenService tokenService;
 
     @Operation(summary = "1. 테스트용 임시 토큰 발급 (Public)")

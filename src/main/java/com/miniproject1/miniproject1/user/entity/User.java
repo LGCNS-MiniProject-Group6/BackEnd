@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.users.domain.entity;
+package com.miniproject1.miniproject1.user.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

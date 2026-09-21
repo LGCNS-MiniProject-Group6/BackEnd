@@ -26,6 +26,10 @@ public class JwtTokenProvider {
         return refreshTokenValidTime;
     }
 
+    public long getAccessTokenExpirationTime() {
+        return accessTokenValidTime;
+    }
+
     @PostConstruct
     protected void init() {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
