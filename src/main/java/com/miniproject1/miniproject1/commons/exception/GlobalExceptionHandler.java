@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,13 +35,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e, HttpServletRequest request) {
-        log.error("MethodArgumentNotValidException: {}", e.getMessage());
+        log.warn("Request validation failed: {}", request.getRequestURI());
 
         BindingResult bindingResult = e.getBindingResult();
         List<ErrorResponse.FieldErrorDetail> details = bindingResult.getFieldErrors().stream()
                 .map(error -> ErrorResponse.FieldErrorDetail.builder()
                         .field(error.getField())
-                        .value(error.getRejectedValue() == null ? "" : error.getRejectedValue().toString())
+                        .value("[REDACTED]")
                         .reason(error.getDefaultMessage())
                         .build())
                 .collect(Collectors.toList());
@@ -52,6 +53,13 @@ public class GlobalExceptionHandler {
     /**
      * 파일 용량 초과 발생 시 (413 Payload Too Large)
      */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected ResponseEntity<ErrorResponse> handleUnreadableBody(
+            HttpMessageNotReadableException e, HttpServletRequest request) {
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI()));
+    }
+
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     protected ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(
             MaxUploadSizeExceededException e, HttpServletRequest request) {
