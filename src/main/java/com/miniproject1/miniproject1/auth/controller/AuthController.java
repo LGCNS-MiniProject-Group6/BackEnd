@@ -19,6 +19,7 @@ import com.miniproject1.miniproject1.auth.service.token.TokenService;
 import com.miniproject1.miniproject1.commons.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -53,8 +54,22 @@ public class AuthController {
 
     @Operation(summary = "1. 이메일 중복확인")
     @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "이메일 사용 가능 여부 반환",
+                    content = @Content(schema = @Schema(implementation = EmailCheckResponseDTO.class),
+                            examples = @ExampleObject(value = "{\"available\": true}"))),
             @ApiResponse(responseCode = "400", description = "이메일 형식이 올바르지 않거나 비어있음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "INVALID_INPUT_VALUE",
+                                      "message": "입력값 또는 요청 형식이 올바르지 않습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/check-email",
+                                      "details": [
+                                        { "field": "email", "value": "invalid-email", "reason": "이메일 형식이 올바르지 않습니다." }
+                                      ]
+                                    }
+                                    """)))
     })
     @GetMapping("/check-email")
     public ResponseEntity<EmailCheckResponseDTO> checkEmail(
@@ -72,10 +87,31 @@ public class AuthController {
 
     @Operation(summary = "3. SMS 인증번호 검증")
     @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "인증 성공",
+                    content = @Content(examples = @ExampleObject(
+                            value = "{\"message\": \"인증 성공!\", \"isVerified\": true}"))),
             @ApiResponse(responseCode = "400", description = "인증번호가 일치하지 않습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "INVALID_INPUT_VALUE",
+                                      "message": "입력값 또는 요청 형식이 올바르지 않습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/phone-verification/verify",
+                                      "details": []
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "404", description = "인증번호가 만료되었거나 요청 이력이 없습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "DATA_NOT_FOUND",
+                                      "message": "요청한 데이터를 찾을 수 없습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/phone-verification/verify",
+                                      "details": []
+                                    }
+                                    """)))
     })
     @PostMapping("/phone-verification/verify")
     public ResponseEntity<?> verifySmsCode(@RequestParam("phoneNumber") String phoneNumber,
@@ -86,10 +122,39 @@ public class AuthController {
 
     @Operation(summary = "4. 회원가입")
     @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "회원가입 성공",
+                    content = @Content(schema = @Schema(implementation = SignupResponseDTO.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "email": "user@example.com",
+                                      "name": "박운영",
+                                      "message": "회원가입이 완료되었습니다."
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "INVALID_INPUT_VALUE",
+                                      "message": "입력값 또는 요청 형식이 올바르지 않습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/signup",
+                                      "details": [
+                                        { "field": "email", "value": "invalid-email", "reason": "이메일 형식이 올바르지 않습니다." }
+                                      ]
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "409", description = "이미 가입된 이메일입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "AUTH_EMAIL_DUPLICATED",
+                                      "message": "이미 가입된 이메일입니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/signup",
+                                      "details": []
+                                    }
+                                    """)))
     })
     @PostMapping("/signup")
     public ResponseEntity<SignupResponseDTO> signup(@Valid @RequestBody SignupRequestDTO request) {
@@ -98,10 +163,41 @@ public class AuthController {
 
     @Operation(summary = "5. 이메일과 비밀번호로 로그인")
     @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공",
+                    content = @Content(schema = @Schema(implementation = LoginResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
+                                      "refreshToken": "eyJhbGciOiJIUzI1NiJ9...",
+                                      "tokenType": "Bearer",
+                                      "accessTokenExpiresIn": 3600,
+                                      "refreshTokenExpiresIn": 1209600
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "INVALID_INPUT_VALUE",
+                                      "message": "입력값 또는 요청 형식이 올바르지 않습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/login",
+                                      "details": [
+                                        { "field": "email", "value": "", "reason": "이메일은 필수입니다." }
+                                      ]
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "401", description = "이메일 또는 비밀번호가 일치하지 않습니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "AUTH_INVALID_CREDENTIALS",
+                                      "message": "이메일 또는 비밀번호가 일치하지 않습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/login",
+                                      "details": []
+                                    }
+                                    """)))
     })
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
@@ -110,10 +206,38 @@ public class AuthController {
 
     @Operation(summary = "6. 리프레시 토큰 재발급(RTR)")
     @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "재발급 성공",
+                    content = @Content(schema = @Schema(implementation = TokenResponseDTO.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
+                                      "refreshToken": "eyJhbGciOiJIUzI1NiJ9..."
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "INVALID_INPUT_VALUE",
+                                      "message": "입력값 또는 요청 형식이 올바르지 않습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/reissue",
+                                      "details": [
+                                        { "field": "refreshToken", "value": "", "reason": "Refresh Token은 필수 입력값입니다." }
+                                      ]
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "AUTH_REFRESH_TOKEN_INVALID",
+                                      "message": "유효하지 않거나 만료된 Refresh Token입니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/reissue",
+                                      "details": []
+                                    }
+                                    """)))
     })
     @PostMapping("/reissue")
     public ResponseEntity<TokenResponseDTO> reissue(@Valid @RequestBody TokenRequestDTO request) {
@@ -122,16 +246,35 @@ public class AuthController {
 
     @Operation(summary = "7. Refresh Token 폐기 및 로그아웃")
     @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "로그아웃 성공"),
             @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "INVALID_INPUT_VALUE",
+                                      "message": "입력값 또는 요청 형식이 올바르지 않습니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/logout",
+                                      "details": [
+                                        { "field": "refreshToken", "value": "", "reason": "Refresh Token은 필수 입력값입니다." }
+                                      ]
+                                    }
+                                    """))),
             @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰입니다.",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "INVALID_TOKEN",
+                                      "message": "유효하지 않은 토큰입니다.",
+                                      "timestamp": "2026-09-22T16:00:00+09:00",
+                                      "path": "/api/auth/logout",
+                                      "details": []
+                                    }
+                                    """)))
     })
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@Valid @RequestBody LogoutRequest request) {
         logoutService.logout(request);
     }
-
-
 }
