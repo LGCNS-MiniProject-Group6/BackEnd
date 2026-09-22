@@ -38,3 +38,8 @@ out/
 
 ### .env 파일 ### 
 .env
+
+### 개인 .md 파일 ###
+db_document_codingRule
+
+*.log

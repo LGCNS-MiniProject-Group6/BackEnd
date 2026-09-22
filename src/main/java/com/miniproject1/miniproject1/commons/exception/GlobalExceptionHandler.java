@@ -1,11 +1,13 @@
 package com.miniproject1.miniproject1.commons.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -46,6 +48,45 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList());
 
         ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI(), details);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * @RequestParam, @PathVariable 등에 대한 @Validated 검증 실패 시 (400 Bad Request)
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<ErrorResponse> handleConstraintViolationException(
+            ConstraintViolationException e, HttpServletRequest request) {
+        log.error("ConstraintViolationException: {}", e.getMessage());
+
+        List<ErrorResponse.FieldErrorDetail> details = e.getConstraintViolations().stream()
+                .map(violation -> ErrorResponse.FieldErrorDetail.builder()
+                        .field(violation.getPropertyPath().toString())
+                        .value(violation.getInvalidValue() == null ? "" : violation.getInvalidValue().toString())
+                        .reason(violation.getMessage())
+                        .build())
+                .collect(Collectors.toList());
+
+        ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI(), details);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * 필수 @RequestParam이 아예 누락된 경우 (400 Bad Request)
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<ErrorResponse> handleMissingServletRequestParameterException(
+            MissingServletRequestParameterException e, HttpServletRequest request) {
+        log.error("MissingServletRequestParameterException: {}", e.getMessage());
+
+        ErrorResponse.FieldErrorDetail detail = ErrorResponse.FieldErrorDetail.builder()
+                .field(e.getParameterName())
+                .value("")
+                .reason("필수 파라미터입니다.")
+                .build();
+
+        ErrorResponse response = ErrorResponse.of(
+                ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI(), List.of(detail));
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
