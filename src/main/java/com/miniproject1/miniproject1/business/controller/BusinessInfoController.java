@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Tag(name = "03. Business", description = "사업 정보")
 @RestController
@@ -35,5 +37,23 @@ public class BusinessInfoController {
         String email = (String) authentication.getPrincipal();
         BusinessInfoResponseDTO response = businessInfoService.registerBusinessInfo(email, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Operation (summary = "사업정보 조회")
+    @GetMapping
+    public ResponseEntity<BusinessInfoResponseDTO> getBusinessInfo(Authentication authentication) {
+        String email = (String) authentication.getPrincipal();
+        BusinessInfoResponseDTO response = businessInfoService.getBusinessInfo(email);
+        return ResponseEntity.ok(response);
+    }
+    
+    @Operation (summary = "사업정보 수정")
+    @PutMapping
+    public ResponseEntity<BusinessInfoResponseDTO> updateBusinessInfo(
+            Authentication authentication,
+            @Valid @RequestBody BusinessInfoRequestDTO request) {
+        String email = (String) authentication.getPrincipal();
+        BusinessInfoResponseDTO response = businessInfoService.updateBusinessInfo(email, request);
+        return ResponseEntity.ok(response);
     }
 }

@@ -38,4 +38,20 @@ public class BusinessInfoService {
         return BusinessInfoResponseDTO.from(saveBusinessInfo);
     }
 
+    public BusinessInfoResponseDTO getBusinessInfo(String email) {
+        BusinessInfo businessInfo = businessInfoRepository.findByEmail(email)
+            .orElseThrow(() -> new BusinessException(ErrorCode.DATA_NOT_FOUND,"등록된 사업 정보가 없습니다."));     
+        return BusinessInfoResponseDTO.from(businessInfo);
+
+    }
+
+    @Transactional 
+    public BusinessInfoResponseDTO updateBusinessInfo(String email, BusinessInfoRequestDTO request) {
+        BusinessInfo businessInfo = businessInfoRepository.findByEmail(email)
+            .orElseThrow(() -> new BusinessException(ErrorCode.DATA_NOT_FOUND, "등록된 사업 정보가 없습니다."));
+        businessInfo.update(request);
+
+        return BusinessInfoResponseDTO.from (businessInfo);
+    }
+
 }

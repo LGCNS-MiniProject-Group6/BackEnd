@@ -21,6 +21,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.miniproject1.miniproject1.business.dto.request.BusinessInfoRequestDTO;
+
 @Entity
 @Table(name = "business_info")
 @Getter
@@ -66,4 +68,12 @@ public class BusinessInfo {
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void update(BusinessInfoRequestDTO request) {
+    this.industry = request.getIndustry();
+    this.region = request.getRegion();
+    this.openingDate = request.getOpeningDate();
+    this.employeeCount = request.getEmployeeCount();
+    this.annualRevenue = request.getAnnualRevenue();
+    }
 }
