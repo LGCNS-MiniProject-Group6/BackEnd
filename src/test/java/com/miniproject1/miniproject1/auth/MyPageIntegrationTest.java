@@ -52,7 +52,7 @@ class MyPageIntegrationTest {
 
     @Test
     void getMyProfileUsesEmailFromAccessToken() throws Exception {
-        mockMvc.perform(get("/api/users/me")
+        mockMvc.perform(get("/api/auth/users/me")
                         .header("Authorization", ACCESS_TOKEN + jwtTokenProvider.createAccessToken(EMAIL)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("email").value(EMAIL))
@@ -63,7 +63,7 @@ class MyPageIntegrationTest {
 
     @Test
     void updateMyProfileChangesNameAndPhone() throws Exception {
-        mockMvc.perform(put("/api/users/me")
+        mockMvc.perform(put("/api/auth/users/me")
                         .header("Authorization", ACCESS_TOKEN + jwtTokenProvider.createAccessToken(EMAIL))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(Map.of(
@@ -77,13 +77,13 @@ class MyPageIntegrationTest {
 
     @Test
     void myProfileRequiresAccessToken() throws Exception {
-        mockMvc.perform(get("/api/users/me"))
+        mockMvc.perform(get("/api/auth/users/me"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void updateRequiresNameAndPhone() throws Exception {
-        mockMvc.perform(put("/api/users/me")
+        mockMvc.perform(put("/api/auth/users/me")
                         .header("Authorization", ACCESS_TOKEN + jwtTokenProvider.createAccessToken(EMAIL))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"변경된 이름\"}"))

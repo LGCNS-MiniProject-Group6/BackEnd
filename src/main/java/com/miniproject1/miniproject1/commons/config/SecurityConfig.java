@@ -43,16 +43,11 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/api/auth/**",
-                                "/api/login",
-                                "/api/logout",
-                                "/api/signup",
-                                "/api/check-email",
-                                "/api/phone-verification/**",
-                                "/api/auth/reissue",
+                                "/api/signup/**",
                                 "/error")
                         .permitAll()
-                        .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/api/auth/users/**").authenticated()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().permitAll() // 개발 초기 전체 허용
                 );
 
