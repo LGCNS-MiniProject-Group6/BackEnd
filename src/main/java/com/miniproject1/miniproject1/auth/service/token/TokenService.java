@@ -31,7 +31,7 @@ public class TokenService {
                 String refreshToken = request.getRefreshToken();
 
                 // 2. Refresh Token 자체 검증
-                if (!jwtTokenProvider.validateToken(refreshToken)) {
+                if (!jwtTokenProvider.isRefreshToken(refreshToken)) {
                         throw new BusinessException(
                                         ErrorCode.INVALID_TOKEN,
                                         "유효하지 않거나 만료된 Refresh Token입니다.");

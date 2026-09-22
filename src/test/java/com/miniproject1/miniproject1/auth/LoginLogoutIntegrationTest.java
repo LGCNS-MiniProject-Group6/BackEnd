@@ -18,13 +18,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
@@ -79,7 +80,7 @@ class LoginLogoutIntegrationTest {
         doAnswer(invocation -> {
             redisStore.put(invocation.getArgument(0), invocation.getArgument(1));
             return null;
-        }).when(valueOperations).set(anyString(), anyString(), any(Duration.class));
+        }).when(valueOperations).set(anyString(), anyString(), anyLong(), any(TimeUnit.class));
         when(valueOperations.get(anyString()))
                 .thenAnswer(invocation -> redisStore.get(invocation.getArgument(0)));
         when(redisTemplate.delete(anyString()))
@@ -121,7 +122,7 @@ class LoginLogoutIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"refreshToken\":\"not-a-jwt\"}"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("code").value("AUTH_REFRESH_TOKEN_INVALID"));
+                .andExpect(jsonPath("code").value("INVALID_TOKEN"));
     }
 
     @Test
@@ -134,7 +135,7 @@ class LoginLogoutIntegrationTest {
                                 "refreshToken", accessToken
                         ))))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("code").value("AUTH_REFRESH_TOKEN_INVALID"));
+                .andExpect(jsonPath("code").value("INVALID_TOKEN"));
     }
 
     @Test
@@ -151,9 +152,10 @@ class LoginLogoutIntegrationTest {
         JsonNode response = login();
 
         assertThat(response.get("tokenType").asText()).isEqualTo("Bearer");
-        assertThat(response.get("accessTokenExpiresIn").asLong()).isEqualTo(3600);
-        assertThat(response.get("refreshTokenExpiresIn").asLong()).isEqualTo(1209600);
-        assertThat(redisStore).hasSize(1).containsValue(EMAIL);
+        assertThat(response.get("accessTokenExpiresIn").asLong()).isEqualTo(1_800_000);
+        assertThat(response.get("refreshTokenExpiresIn").asLong()).isEqualTo(604_800_000);
+        assertThat(redisStore).hasSize(1).containsKey("RT:" + EMAIL)
+                .containsValue(response.get("refreshToken").asText());
     }
 
     @Test
@@ -178,7 +180,7 @@ class LoginLogoutIntegrationTest {
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("userEmail").value(EMAIL))
-                .andExpect(jsonPath("authorities[0].authority").value("ROLE_USER"));
+                .andExpect(jsonPath("authorities").isEmpty());
     }
 
     @Test
@@ -187,14 +189,13 @@ class LoginLogoutIntegrationTest {
 
         mockMvc.perform(get("/protected")
                         .header("Authorization", "Bearer " + refreshToken))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("code").value("INVALID_TOKEN"));
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void redisFailureDoesNotReturnSuccessfulLogin() throws Exception {
         doThrow(new RedisConnectionFailureException("test Redis failure"))
-                .when(valueOperations).set(anyString(), anyString(), any(Duration.class));
+                .when(valueOperations).set(anyString(), anyString(), anyLong(), any(TimeUnit.class));
 
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)

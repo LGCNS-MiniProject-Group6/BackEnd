@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.domain.auth.service;
+package com.miniproject1.miniproject1.auth.service.signup;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
@@ -18,10 +18,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.miniproject1.miniproject1.commons.exception.BusinessException;
 import com.miniproject1.miniproject1.commons.exception.ErrorCode;
-import com.miniproject1.miniproject1.domain.auth.dto.SignupRequestDTO;
-import com.miniproject1.miniproject1.domain.auth.dto.SignupResponseDTO;
-import com.miniproject1.miniproject1.domain.auth.entity.User;
-import com.miniproject1.miniproject1.domain.auth.repository.UserRepository;
+import com.miniproject1.miniproject1.auth.dto.signup.request.SignupRequestDTO;
+import com.miniproject1.miniproject1.auth.dto.signup.response.SignupResponseDTO;
+import com.miniproject1.miniproject1.user.entity.User;
+import com.miniproject1.miniproject1.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class SignupServiceTest {

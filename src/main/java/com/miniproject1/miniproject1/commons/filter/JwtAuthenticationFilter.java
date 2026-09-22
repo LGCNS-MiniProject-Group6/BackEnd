@@ -106,6 +106,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .parseClaimsJws(token)
                     .getBody();
 
+            if (!"access".equals(claims.get("tokenType", String.class))) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
             // 6. Claims에서 정보(사용자 이메일 및 권한) 추출
             String email = claims.getSubject();
             String role = claims.get("role", String.class);
