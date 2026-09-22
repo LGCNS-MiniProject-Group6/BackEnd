@@ -12,8 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.miniproject1.miniproject1.business.dto.request.BusinessInfoRequestDTO;
 import com.miniproject1.miniproject1.business.dto.response.BusinessInfoResponseDTO;
 import com.miniproject1.miniproject1.business.service.BusinessInfoService;
+import com.miniproject1.miniproject1.commons.exception.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +37,12 @@ public class BusinessInfoController {
     private final BusinessInfoService businessInfoService;
 
     @Operation(summary = "사업정보 등록")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "이미 등록된 사업 정보입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping
     public ResponseEntity<BusinessInfoResponseDTO> registerBusinessInfo(
             Authentication authentication,
@@ -42,6 +53,10 @@ public class BusinessInfoController {
     }
 
     @Operation (summary = "사업정보 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "404", description = "등록된 사업 정보가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping
     public ResponseEntity<BusinessInfoResponseDTO> getBusinessInfo(Authentication authentication) {
         String email = (String) authentication.getPrincipal();
@@ -50,6 +65,12 @@ public class BusinessInfoController {
     }
     
     @Operation (summary = "사업정보 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "등록된 사업 정보가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PutMapping
     public ResponseEntity<BusinessInfoResponseDTO> updateBusinessInfo(
             Authentication authentication,
@@ -60,6 +81,10 @@ public class BusinessInfoController {
     }
 
     @Operation (summary = "사업정보 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "404", description = "등록된 사업 정보가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @DeleteMapping
     public ResponseEntity<Void> deleteBusinessInfo(Authentication authentication) {
         String email = (String) authentication.getPrincipal();
