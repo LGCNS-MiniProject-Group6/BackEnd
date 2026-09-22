@@ -43,7 +43,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Auth", description = "인증 / 로그인 / 토큰 관리 API")
+@Tag(name = "01. Auth", description = "인증 / 로그인 / 토큰 관리 API")
 @RestController
 @RequestMapping("/api/auth")
 @Validated
