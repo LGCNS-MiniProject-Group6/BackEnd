@@ -52,4 +52,10 @@ public class User {
         this.name = name;
         this.phoneNumber = phoneNumber;
     }
+
+    public void updateProfile(String name, String phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
+
 }

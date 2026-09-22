@@ -36,7 +36,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // JWT 인증을 거치지 않을 화이트리스트 URL 목록
     // 코딩하면서 수정 진행
     private static final List<String> WHITE_LIST = List.of(
-            "/api/auth/**",
+            "/api/auth/check-email",
+            "/api/auth/phone-verification/**",
+            "/api/auth/signup",
+            "/api/auth/login",
+            "/api/auth/reissue",
+            "/api/auth/logout",
             "/token",
             "/test/**",
             "/swagger-ui/**",
@@ -79,9 +84,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 3. Authorization 헤더 존재 여부 및 'Bearer ' 시작 여부 검증
+        // 공개 API는 토큰 없이도 통과할 수 있도록 헤더가 없으면 다음 필터로 전달
         String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (header == null || header.isBlank()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (!header.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
