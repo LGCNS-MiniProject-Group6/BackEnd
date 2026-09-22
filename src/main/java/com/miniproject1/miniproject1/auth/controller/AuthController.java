@@ -7,14 +7,11 @@ import com.miniproject1.miniproject1.auth.dto.Token.TokenResponseDTO;
 import com.miniproject1.miniproject1.auth.dto.login.LoginRequest;
 import com.miniproject1.miniproject1.auth.dto.login.LoginResponse;
 import com.miniproject1.miniproject1.auth.dto.logout.LogoutRequest;
-import com.miniproject1.miniproject1.auth.dto.mypage.request.ProfileUpdateRequest;
-import com.miniproject1.miniproject1.auth.dto.mypage.response.ProfileResponse;
 import com.miniproject1.miniproject1.auth.dto.signup.request.SignupRequestDTO;
 import com.miniproject1.miniproject1.auth.dto.signup.response.EmailCheckResponseDTO;
 import com.miniproject1.miniproject1.auth.dto.signup.response.SignupResponseDTO;
 import com.miniproject1.miniproject1.auth.service.login.LoginService;
 import com.miniproject1.miniproject1.auth.service.logout.LogoutService;
-import com.miniproject1.miniproject1.auth.service.mypage.MyPageService;
 import com.miniproject1.miniproject1.auth.service.signup.EmailCheckService;
 import com.miniproject1.miniproject1.auth.service.signup.SignupService;
 import com.miniproject1.miniproject1.auth.service.sms.SmsService;
@@ -27,11 +24,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,7 +45,6 @@ public class AuthController {
     private final LoginService loginService;
     private final TokenService tokenService;
     private final LogoutService logoutService;
-    private final MyPageService myPageService;
 
     @Operation(summary = "1. 이메일 중복확인")
     @GetMapping("/check-email")
@@ -100,16 +94,4 @@ public class AuthController {
         logoutService.logout(request);
     }
 
-    @Operation(summary = "8. 내 정보 조회")
-    @GetMapping("/users/me")
-    public ResponseEntity<ProfileResponse> getMyProfile(Authentication authentication) {
-        return ResponseEntity.ok(myPageService.getMyProfile(authentication.getName()));
-    }
-
-    @Operation(summary = "9. 내 정보 수정")
-    @PutMapping("/users/me")
-    public ResponseEntity<ProfileResponse> updateMyProfile(Authentication authentication,
-                                                            @Valid @RequestBody ProfileUpdateRequest request) {
-        return ResponseEntity.ok(myPageService.updateMyProfile(authentication.getName(), request));
-    }
 }

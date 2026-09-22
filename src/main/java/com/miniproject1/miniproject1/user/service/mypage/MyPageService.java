@@ -1,7 +1,7 @@
-package com.miniproject1.miniproject1.auth.service.mypage;
+package com.miniproject1.miniproject1.user.service.mypage;
 
-import com.miniproject1.miniproject1.auth.dto.mypage.request.ProfileUpdateRequest;
-import com.miniproject1.miniproject1.auth.dto.mypage.response.ProfileResponse;
+import com.miniproject1.miniproject1.user.dto.mypage.request.ProfileUpdateRequest;
+import com.miniproject1.miniproject1.user.dto.mypage.response.ProfileResponse;
 import com.miniproject1.miniproject1.commons.exception.BusinessException;
 import com.miniproject1.miniproject1.commons.exception.ErrorCode;
 import com.miniproject1.miniproject1.user.entity.User;

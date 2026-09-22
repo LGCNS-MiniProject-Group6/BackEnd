@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.auth.dto.mypage.request;
+package com.miniproject1.miniproject1.user.dto.mypage.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
