@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "/api/auth/**",
+                                "/api/signup/**",
+
                                 "/error")
                         .permitAll()
                         .anyRequest().permitAll() // 개발 초기 전체 허용
