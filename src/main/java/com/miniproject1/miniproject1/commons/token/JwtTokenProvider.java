@@ -22,17 +22,25 @@ public class JwtTokenProvider {
     private final long accessTokenValidTime = 1000L * 60 * 30;
     private final long refreshTokenValidTime = 1000L * 60 * 60 * 24 * 7;
 
+    public long getRefreshTokenExpirationTime() {
+        return refreshTokenValidTime;
+    }
+
+    public long getAccessTokenExpirationTime() {
+        return accessTokenValidTime;
+    }
+
     @PostConstruct
     protected void init() {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     // 1. Access Token 생성
-    public String createAccessToken(String email, String role) {
+    public String createAccessToken(String email) {
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put("role", role);
 
         Date now = new Date();
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -46,6 +54,7 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(email);
 
         Date now = new Date();
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -67,7 +76,11 @@ public class JwtTokenProvider {
     // 4. 토큰 유효성 및 만료 여부 확인
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+
             return true;
         } catch (Exception e) {
             return false;

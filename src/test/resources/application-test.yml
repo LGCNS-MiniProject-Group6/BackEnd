@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:auth-test;MODE=MariaDB;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  ai:
+    openai:
+      api-key: test-key-not-used-for-network
+  main:
+    banner-mode: off
+
+jwt:
+  secret: test-only-signing-key-at-least-32-bytes-long
+  access-token-expires-in: 3600
+  refresh-token-expires-in: 1209600
+
+coolsms:
+  api:
+    coolSmsUrl: https://example.invalid
+    coolSmsKey: test-key
+    coolSmsSecret: test-secret
+    coolSmsNumber: 01000000000
+
+logging:
+  level:
+    root: WARN

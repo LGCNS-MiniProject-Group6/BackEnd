@@ -36,8 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // JWT 인증을 거치지 않을 화이트리스트 URL 목록
     // 코딩하면서 수정 진행
     private static final List<String> WHITE_LIST = List.of(
-            "/auth/**",
+            "/api/auth/**",
             "/token",
+            "/test/**",
             "/swagger-ui/**",
             "/v3/api-docs/**");
 

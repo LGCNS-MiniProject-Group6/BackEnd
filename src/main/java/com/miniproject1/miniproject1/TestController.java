@@ -1,6 +1,9 @@
 package com.miniproject1.miniproject1;
 
-import com.miniproject1.miniproject1.auth.service.SmsService;
+import com.miniproject1.miniproject1.auth.dto.Token.TokenRequestDTO;
+import com.miniproject1.miniproject1.auth.dto.Token.TokenResponseDTO;
+import com.miniproject1.miniproject1.auth.service.sms.SmsService;
+import com.miniproject1.miniproject1.auth.service.token.TokenService;
 import com.miniproject1.miniproject1.commons.exception.BusinessException;
 import com.miniproject1.miniproject1.commons.exception.ErrorCode;
 import com.miniproject1.miniproject1.commons.token.JwtTokenProvider;
@@ -18,19 +21,20 @@ import java.util.Map;
 /**
  * 기본 Config 및 JWT 인증 동작 검증을 위한 임시 컨트롤러
  */
-@Tag(name = "00. Config Test", description = "기본 설정 및 JWT 동작 확인용 API")
 @AllArgsConstructor
+@Tag(name = "00. Config Test", description = "기본 설정 및 JWT 동작 확인용 API")
 @RestController
 // @RequestMapping 지우거나 비워두기!
 public class TestController {
 
     private final SmsService smsService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
 
     @Operation(summary = "1. 테스트용 임시 토큰 발급 (Public)")
     @GetMapping("/token")
     public ResponseEntity<?> createTestToken(@RequestParam String email, @RequestParam String role) {
-        String accessToken = jwtTokenProvider.createAccessToken(email, role);
+        String accessToken = jwtTokenProvider.createAccessToken(email);
         String refreshToken = jwtTokenProvider.createRefreshToken(email);
 
         return ResponseEntity.ok(Map.of(
@@ -69,4 +73,15 @@ public class TestController {
                 "message", "인증 성공!",
                 "isVerified", result));
     }
+
+    @Operation(summary = "5. 리프레시 토큰 재발급(RTR) 체크해야함")
+    @PostMapping("/test/token")
+    public ResponseEntity<TokenResponseDTO> reissue(
+            @RequestBody TokenRequestDTO request) {
+
+        TokenResponseDTO response = tokenService.reissue(request);
+
+        return ResponseEntity.ok(response);
+    }
+
 }
