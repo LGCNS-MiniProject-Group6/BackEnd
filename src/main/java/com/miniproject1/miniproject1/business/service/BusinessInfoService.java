@@ -21,7 +21,7 @@ public class BusinessInfoService {
     @Transactional 
     public BusinessInfoResponseDTO registerBusinessInfo (String email, BusinessInfoRequestDTO request) {
         if(businessInfoRepository.existsByEmail(email)) {
-            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "이미 등록된 사업 정보입니다.");
+            throw new BusinessException(ErrorCode.BUSINESS_INFO_ALREADY_EXISTS);
         }
 
         
@@ -40,7 +40,7 @@ public class BusinessInfoService {
 
     public BusinessInfoResponseDTO getBusinessInfo(String email) {
         BusinessInfo businessInfo = businessInfoRepository.findByEmail(email)
-            .orElseThrow(() -> new BusinessException(ErrorCode.DATA_NOT_FOUND,"등록된 사업 정보가 없습니다."));     
+            .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_INFO_NOT_FOUND));
         return BusinessInfoResponseDTO.from(businessInfo);
 
     }
@@ -48,7 +48,7 @@ public class BusinessInfoService {
     @Transactional 
     public BusinessInfoResponseDTO updateBusinessInfo(String email, BusinessInfoRequestDTO request) {
         BusinessInfo businessInfo = businessInfoRepository.findByEmail(email)
-            .orElseThrow(() -> new BusinessException(ErrorCode.DATA_NOT_FOUND, "등록된 사업 정보가 없습니다."));
+            .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_INFO_NOT_FOUND));
         businessInfo.update(request);
 
         return BusinessInfoResponseDTO.from (businessInfo);
@@ -57,7 +57,7 @@ public class BusinessInfoService {
     @Transactional 
     public void deleteBusinessInfo(String email) {
         BusinessInfo businessInfo = businessInfoRepository.findByEmail(email)
-            .orElseThrow(() -> new BusinessException(ErrorCode.DATA_NOT_FOUND, "등록된 사업 정보가 없습니다."));
+            .orElseThrow(() -> new BusinessException(ErrorCode.BUSINESS_INFO_NOT_FOUND));
         businessInfoRepository.delete(businessInfo);
     }
 
