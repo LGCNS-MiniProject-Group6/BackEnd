@@ -16,7 +16,12 @@ import com.miniproject1.miniproject1.auth.service.signup.EmailCheckService;
 import com.miniproject1.miniproject1.auth.service.signup.SignupService;
 import com.miniproject1.miniproject1.auth.service.sms.SmsService;
 import com.miniproject1.miniproject1.auth.service.token.TokenService;
+import com.miniproject1.miniproject1.commons.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -33,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Auth", description = "인증 / 로그인 / 토큰 관리 API")
+@Tag(name = "01. Auth", description = "인증 / 로그인 / 토큰 관리 API")
 @RestController
 @RequestMapping("/api/auth")
 @Validated
@@ -47,6 +52,10 @@ public class AuthController {
     private final LogoutService logoutService;
 
     @Operation(summary = "1. 이메일 중복확인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "이메일 형식이 올바르지 않거나 비어있음",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @GetMapping("/check-email")
     public ResponseEntity<EmailCheckResponseDTO> checkEmail(
             @RequestParam("email") @NotBlank(message = "이메일은 필수입니다.")
@@ -62,6 +71,12 @@ public class AuthController {
     }
 
     @Operation(summary = "3. SMS 인증번호 검증")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "인증번호가 일치하지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "인증번호가 만료되었거나 요청 이력이 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/phone-verification/verify")
     public ResponseEntity<?> verifySmsCode(@RequestParam("phoneNumber") String phoneNumber,
                                            @RequestParam("code") String code) {
@@ -70,28 +85,53 @@ public class AuthController {
     }
 
     @Operation(summary = "4. 회원가입")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "이미 가입된 이메일입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/signup")
     public ResponseEntity<SignupResponseDTO> signup(@Valid @RequestBody SignupRequestDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(signupService.signup(request));
     }
 
     @Operation(summary = "5. 이메일과 비밀번호로 로그인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "이메일 또는 비밀번호가 일치하지 않습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(loginService.login(request));
     }
 
     @Operation(summary = "6. 리프레시 토큰 재발급(RTR)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/reissue")
     public ResponseEntity<TokenResponseDTO> reissue(@Valid @RequestBody TokenRequestDTO request) {
         return ResponseEntity.ok(tokenService.reissue(request));
     }
 
     @Operation(summary = "7. Refresh Token 폐기 및 로그아웃")
+    @ApiResponses({
+            @ApiResponse(responseCode = "400", description = "요청 값 검증 실패",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@Valid @RequestBody LogoutRequest request) {
         logoutService.logout(request);
     }
+
 
 }
