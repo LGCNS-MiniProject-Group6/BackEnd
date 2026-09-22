@@ -79,9 +79,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 3. Authorization 헤더 존재 여부 및 'Bearer ' 시작 여부 검증
+        // 공개 API는 토큰 없이도 통과할 수 있도록 헤더가 없으면 다음 필터로 전달
         String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (header == null || header.isBlank()) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        if (!header.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
