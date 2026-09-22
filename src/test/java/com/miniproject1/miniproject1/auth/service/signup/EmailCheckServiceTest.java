@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.domain.auth.service;
+package com.miniproject1.miniproject1.auth.service.signup;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -9,8 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.miniproject1.miniproject1.domain.auth.dto.EmailCheckResponseDTO;
-import com.miniproject1.miniproject1.domain.auth.repository.UserRepository;
+import com.miniproject1.miniproject1.auth.dto.signup.response.EmailCheckResponseDTO;
+import com.miniproject1.miniproject1.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class EmailCheckServiceTest {

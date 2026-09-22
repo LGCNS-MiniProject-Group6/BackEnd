@@ -38,6 +38,7 @@ public class JwtTokenProvider {
     // 1. Access Token 생성
     public String createAccessToken(String email) {
         Claims claims = Jwts.claims().setSubject(email);
+        claims.put("tokenType", "access");
 
         Date now = new Date();
 
@@ -52,6 +53,7 @@ public class JwtTokenProvider {
     // 2. Refresh Token 생성
     public String createRefreshToken(String email) {
         Claims claims = Jwts.claims().setSubject(email);
+        claims.put("tokenType", "refresh");
 
         Date now = new Date();
 
@@ -82,6 +84,28 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token);
 
             return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isAccessToken(String token) {
+        return hasTokenType(token, "access");
+    }
+
+    public boolean isRefreshToken(String token) {
+        return hasTokenType(token, "refresh");
+    }
+
+    private boolean hasTokenType(String token, String expectedType) {
+        try {
+            String tokenType = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("tokenType", String.class);
+            return expectedType.equals(tokenType);
         } catch (Exception e) {
             return false;
         }
