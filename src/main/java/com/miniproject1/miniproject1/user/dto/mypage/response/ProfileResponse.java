@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.auth.dto.mypage.response;
+package com.miniproject1.miniproject1.user.dto.mypage.response;
 
 import com.miniproject1.miniproject1.user.entity.User;
 
