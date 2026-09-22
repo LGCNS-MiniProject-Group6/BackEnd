@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -55,5 +57,13 @@ public class BusinessInfoController {
         String email = (String) authentication.getPrincipal();
         BusinessInfoResponseDTO response = businessInfoService.updateBusinessInfo(email, request);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation (summary = "사업정보 삭제")
+    @DeleteMapping
+    public ResponseEntity<Void> deleteBusinessInfo(Authentication authentication) {
+        String email = (String) authentication.getPrincipal();
+        businessInfoService.deleteBusinessInfo(email);
+        return ResponseEntity.noContent().build();
     }
 }
