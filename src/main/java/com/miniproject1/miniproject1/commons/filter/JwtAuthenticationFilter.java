@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // 코딩하면서 수정 진행
     private static final List<String> WHITE_LIST = List.of(
             "/api/auth/**",
-            "/token",
+            "/api/programs/**", // 테스트용도 임시 추가
             "/test/**",
             "/swagger-ui/**",
             "/v3/api-docs/**");

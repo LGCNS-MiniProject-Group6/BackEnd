@@ -89,3 +89,8 @@ coolsms:
     coolSmsKey: ${COOLSMS_API_KEY}
     coolSmsSecret: ${COOLSMS_API_SECRET}
     coolSmsNumber: ${COOLSMS_SENDER_NUMBER}
+
+biziinfo:
+  api:
+    url: ${BIZIINFO_API_URL}
+    key: ${BIZIINFO_API_KEY}

@@ -73,6 +73,9 @@ dependencies {
 
     // coolSms 
     implementation 'net.nurigo:sdk:4.3.0'
+
+    // biziapi의 html 제거하기 위함
+    implementation 'org.jsoup:jsoup:1.17.2'
 }
 
 tasks.named('test') {
