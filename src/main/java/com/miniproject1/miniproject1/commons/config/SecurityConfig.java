@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/error")
                         .permitAll()
                         .requestMatchers("/api/auth/users/**").authenticated()
+                        .requestMatchers("/api/interests/**").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().permitAll() // 개발 초기 전체 허용
                 );
