@@ -30,6 +30,7 @@ public enum ErrorCode {
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "DUPLICATE_RESOURCE", "이미 존재하는 데이터이거나 상태 충돌이 발생했습니다."),
     AUTH_EMAIL_DUPLICATED(HttpStatus.CONFLICT, "AUTH_EMAIL_DUPLICATED", "이미 가입된 이메일입니다."),
     BUSINESS_INFO_ALREADY_EXISTS(HttpStatus.CONFLICT, "BUSINESS_INFO_ALREADY_EXISTS", "이미 등록된 사업 정보입니다."),
+    FAVORITE_ALREADY_EXISTS(HttpStatus.CONFLICT, "FAVORITE_ALREADY_EXISTS", "이미 등록한 관심공고입니다."),
 
     // 413 Payload Too Large
     PAYLOAD_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "PAYLOAD_TOO_LARGE", "요청 크기 또는 파일 크기가 허용 범위를 초과했습니다."),
