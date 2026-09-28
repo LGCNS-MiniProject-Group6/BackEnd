@@ -21,18 +21,21 @@ public class ProgramResponseDTO {
     private LocalDate applyEndDate;
     private String apiUpdatedAt;
 
-    public static ProgramResponseDTO from(Program program) {
+    private String pblancUrl;
+
+    public static ProgramResponseDTO from(Program entity) {
         return ProgramResponseDTO.builder()
-                .pblancId(program.getPblancId())
-                .title(program.getTitle())
-                .category(program.getCategory())
-                .organization(program.getOrganization())
-                .targetDescription(program.getTargetDescription())
-                .description(program.getDescription())
-                .rawApplyPeriod(program.getRawApplyPeriod())
-                .applyStartDate(program.getApplyStartDate())
-                .applyEndDate(program.getApplyEndDate())
-                .apiUpdatedAt(program.getApiUpdatedAt())
+                .pblancId(entity.getPblancId())
+                .title(entity.getTitle())
+                .category(entity.getCategory())
+                .organization(entity.getOrganization())
+                .targetDescription(entity.getTargetDescription())
+                .description(entity.getDescription())
+                .rawApplyPeriod(entity.getRawApplyPeriod())
+                .applyStartDate(entity.getApplyStartDate())
+                .applyEndDate(entity.getApplyEndDate())
+                .apiUpdatedAt(entity.getApiUpdatedAt())
+                .pblancUrl(entity.getPblancUrl())
                 .build();
     }
 }
