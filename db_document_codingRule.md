@@ -190,13 +190,16 @@ CREATE TABLE programs (
     category VARCHAR(50),
     organization VARCHAR(100),
 
-    target_description TEXT, 
-    description TEXT,        
+    target_description TEXT,
+    description TEXT,
 
     apply_start_date DATE,
     apply_end_date DATE,
-    raw_apply_period VARCHAR(30), 
+    raw_apply_period VARCHAR(250),
     api_updated_at VARCHAR(30),
+
+    pblanc_url VARCHAR(1000),
+    print_file_path_url VARCHAR(1000),
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

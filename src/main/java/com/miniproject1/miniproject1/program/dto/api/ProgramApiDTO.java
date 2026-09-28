@@ -49,6 +49,17 @@ public class ProgramApiDTO {
     @JsonAlias({ "creatPnttm" })
     private String apiUpdatedAt;
 
+    // ★ 공고 상세 URL
+    @JsonProperty("pblancUrl")
+    @JsonAlias({ "pblancUrl", "dtlUrl", "url" })
+    private String pblancUrl;
+
+    // ★ 기업마당 실제 첨부파일/서식 경로 필드 (printFlpth 등 모든 변형 매핑)
+    // ★ 기업마당 API 실제 첨부파일 경로 필드: printFlpthNm
+    @JsonProperty("printFlpthNm")
+    @JsonAlias({ "printFlpthNm" })
+    private String printFilePathUrl;
+
     public LocalDate getApplyStartDate() {
         return parseDate(0);
     }
@@ -100,10 +111,12 @@ public class ProgramApiDTO {
                 .organization(this.organization)
                 .targetDescription(cleanHtml(this.targetDescription))
                 .description(cleanHtml(this.description))
-                .rawApplyPeriod(this.reqstBeginEndDe) // ★ 원본 문자열 무조건 저장
+                .rawApplyPeriod(this.reqstBeginEndDe)
                 .applyStartDate(getApplyStartDate())
                 .applyEndDate(getApplyEndDate())
                 .apiUpdatedAt(this.apiUpdatedAt)
+                .pblancUrl(this.pblancUrl)
+                .printFilePathUrl(this.printFilePathUrl)
                 .build();
     }
 }
