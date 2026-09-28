@@ -1,4 +1,4 @@
-package com.miniproject1.miniproject1.interest.entity;
+package com.miniproject1.miniproject1.favorites.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class InterestProgram {
+public class Favorite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +42,7 @@ public class InterestProgram {
     private LocalDateTime createdAt;
 
     @Builder
-    private InterestProgram(String email, String programId) {
+    private Favorite(String email, String programId) {
         this.email = email;
         this.programId = programId;
     }
