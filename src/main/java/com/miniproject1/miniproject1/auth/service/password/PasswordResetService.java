@@ -31,9 +31,12 @@ public class PasswordResetService {
     private final PasswordEncoder passwordEncoder;
 
     public void sendCode(PasswordResetSendCodeRequest request) {
-        // 존재하지 않는 계정인지 응답으로 노출하지 않습니다. 일치하는 경우에만 SMS를 보냅니다.
-        userRepository.findByEmailAndPhoneNumber(request.email(), request.phone())
-                .ifPresent(user -> smsService.sendVerificationCode(request.phone()));
+        if (userRepository.findByEmailAndPhoneNumber(request.email(), request.phone()).isEmpty()) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND,
+                    "이메일과 휴대폰 번호가 일치하는 사용자를 찾을 수 없습니다.");
+        }
+
+        smsService.sendVerificationCode(request.phone());
     }
 
     public PasswordResetTokenResponse verifyCode(PasswordResetVerifyRequest request) {

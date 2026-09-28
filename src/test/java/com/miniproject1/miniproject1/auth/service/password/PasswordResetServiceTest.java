@@ -72,8 +72,9 @@ class PasswordResetServiceTest {
         String phone = "01012345678";
         when(userRepository.findByEmailAndPhoneNumber(email, phone)).thenReturn(Optional.empty());
 
-        passwordResetService.sendCode(
-                new com.miniproject1.miniproject1.auth.dto.request.password.PasswordResetSendCodeRequest(email, phone));
+        assertThatThrownBy(() -> passwordResetService.sendCode(
+                new com.miniproject1.miniproject1.auth.dto.request.password.PasswordResetSendCodeRequest(email, phone)))
+                .isInstanceOf(RuntimeException.class);
 
         verify(smsService, never()).sendVerificationCode(phone);
     }

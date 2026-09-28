@@ -21,10 +21,12 @@ public class FindEmailService {
     private final SmsService smsService;
 
     public void sendCode(FindEmailSendCodeRequest request) {
-        // 가입 여부는 응답으로 노출하지 않고, 가입된 번호에만 실제 SMS를 보냅니다.
-        if (!userRepository.findAllByPhoneNumber(request.phone()).isEmpty()) {
-            smsService.sendVerificationCode(request.phone());
+        if (userRepository.findAllByPhoneNumber(request.phone()).isEmpty()) {
+            throw new BusinessException(ErrorCode.USER_NOT_FOUND,
+                    "해당 휴대폰 번호로 가입된 사용자를 찾을 수 없습니다.");
         }
+
+        smsService.sendVerificationCode(request.phone());
     }
 
     public FindEmailResponse verify(FindEmailVerifyRequest request) {

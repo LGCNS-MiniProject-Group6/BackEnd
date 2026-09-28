@@ -48,7 +48,9 @@ class FindEmailServiceTest {
         String phone = "01012345678";
         when(userRepository.findAllByPhoneNumber(phone)).thenReturn(List.of());
 
-        findEmailService.sendCode(new com.miniproject1.miniproject1.auth.dto.request.findemail.FindEmailSendCodeRequest(phone));
+        assertThatThrownBy(() -> findEmailService.sendCode(
+                new com.miniproject1.miniproject1.auth.dto.request.findemail.FindEmailSendCodeRequest(phone)))
+                .isInstanceOf(RuntimeException.class);
 
         verify(smsService, never()).sendVerificationCode(phone);
     }
