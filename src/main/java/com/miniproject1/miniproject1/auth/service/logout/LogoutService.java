@@ -21,7 +21,7 @@ public class LogoutService {
         String refreshToken = request.refreshToken();
 
         // 1. Refresh Token 검증 (유효하지 않거나 만료된 토큰일 경우)
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
+        if (!jwtTokenProvider.isRefreshToken(refreshToken)) {
             throw new BusinessException(ErrorCode.INVALID_TOKEN);
         }
 
