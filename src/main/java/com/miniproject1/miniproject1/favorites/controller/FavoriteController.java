@@ -37,9 +37,23 @@ public class FavoriteController {
                     content = @Content(schema = @Schema(implementation = FavoriteResponse.class),
                             examples = @ExampleObject(value = """
                                     {
-                                      "id": 1,
-                                      "programId": "PBLN000000000001",
+                                      "favoriteId": 1,
+                                      "pblancId": "PBLN000000000001",
+                                      "title": "2026 온라인 판로지원 사업",
+                                      "organization": "중소벤처기업부",
+                                      "applyEndDate": "2026-10-04",
                                       "createdAt": "2026-09-28T16:00:00"
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 공고입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "PROGRAM_NOT_FOUND",
+                                      "message": "존재하지 않는 공고입니다.",
+                                      "timestamp": "2026-09-28T16:00:00+09:00",
+                                      "path": "/api/favorites/PBLN000000000001",
+                                      "details": []
                                     }
                                     """))),
             @ApiResponse(responseCode = "409", description = "이미 등록한 관심공고입니다.",
@@ -57,9 +71,9 @@ public class FavoriteController {
     @PostMapping("/{pblancId}")
     public ResponseEntity<FavoriteResponse> add(
             Authentication authentication,
-            @PathVariable("pblancId") String programId) {
+            @PathVariable("pblancId") String pblancId) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(favoriteService.add(authentication.getName(), programId));
+                .body(favoriteService.add(authentication.getName(), pblancId));
     }
 
     @Operation(summary = "내 관심공고 조회")
@@ -84,8 +98,8 @@ public class FavoriteController {
                                     """)))
     })
     @DeleteMapping("/{pblancId}")
-    public ResponseEntity<Void> delete(Authentication authentication, @PathVariable("pblancId") String programId) {
-        favoriteService.delete(authentication.getName(), programId);
+    public ResponseEntity<Void> delete(Authentication authentication, @PathVariable("pblancId") String pblancId) {
+        favoriteService.delete(authentication.getName(), pblancId);
         return ResponseEntity.noContent().build();
     }
 }

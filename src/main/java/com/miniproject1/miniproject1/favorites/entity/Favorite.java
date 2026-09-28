@@ -1,11 +1,15 @@
 package com.miniproject1.miniproject1.favorites.entity;
 
+import com.miniproject1.miniproject1.program.entity.Program;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -19,8 +23,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "favorites", uniqueConstraints = @UniqueConstraint(
-        name = "uk_favorites_email_program",
-        columnNames = {"email", "program_id"}))
+        name = "uk_email_program",
+        columnNames = {"email", "pblanc_id"}))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
@@ -28,22 +32,23 @@ public class Favorite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "favorite_id")
     private Long id;
 
     @Column(name = "email", length = 100, nullable = false)
     private String email;
 
-    /** 외부 공고 식별자. Program 엔티티가 생기면 FK로 전환할 수 있습니다. */
-    @Column(name = "program_id", length = 100, nullable = false)
-    private String programId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pblanc_id", nullable = false)
+    private Program program;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    private Favorite(String email, String programId) {
+    private Favorite(String email, Program program) {
         this.email = email;
-        this.programId = programId;
+        this.program = program;
     }
 }
