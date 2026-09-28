@@ -31,10 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Value("${jwt.secret}")
     private String secret;
+
     private Key key;
 
     // JWT 인증을 거치지 않을 화이트리스트 URL 목록
-    // 코딩하면서 수정 진행
     private static final List<String> WHITE_LIST = List.of(
             "/api/auth/check-email",
             "/api/auth/phone-verification/**",
@@ -42,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/api/auth/login",
             "/api/auth/reissue",
             "/api/auth/logout",
+            "/api/programs/**",
             "/token",
             "/test/**",
             "/swagger-ui/**",
@@ -86,10 +87,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 공개 API는 토큰 없이도 통과할 수 있도록 헤더가 없으면 다음 필터로 전달
         String header = request.getHeader("Authorization");
+
         if (header == null || header.isBlank()) {
             filterChain.doFilter(request, response);
             return;
         }
+
         if (!header.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -99,7 +102,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = header.substring(7);
 
         try {
-            // 5. 토큰 파싱 및 서명 검증 (유효하지 않거나 만료된 경우 Exception 발생)
+            // 5. 토큰 파싱 및 서명 검증
+            // 유효하지 않거나 만료된 경우 Exception 발생
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
@@ -119,10 +123,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     email,
                     null,
-                    role != null ? List.of(() -> "ROLE_" + role) : List.of());
+                    role != null
+                            ? List.of(() -> "ROLE_" + role)
+                            : List.of());
 
             // 8. 요청의 세부 정보(IP, Session ID 등)를 인증 객체에 설정
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            authenticationToken.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request));
 
             // 9. SecurityContextHolder에 인증 객체 등록
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
