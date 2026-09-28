@@ -43,3 +43,4 @@ out/
 db_document_codingRule
 
 *.log
+logs/

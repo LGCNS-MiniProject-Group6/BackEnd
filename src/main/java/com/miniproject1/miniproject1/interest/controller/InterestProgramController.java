@@ -1,8 +1,14 @@
 package com.miniproject1.miniproject1.interest.controller;
 
+import com.miniproject1.miniproject1.commons.exception.ErrorResponse;
 import com.miniproject1.miniproject1.interest.dto.response.InterestProgramResponse;
 import com.miniproject1.miniproject1.interest.service.InterestProgramService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,17 +25,39 @@ import java.util.List;
 
 @Tag(name = "Interest", description = "관심공고 관리 API")
 @RestController
-@RequestMapping("/api/interests/programs")
+@RequestMapping("/api/favorites")
 @RequiredArgsConstructor
 public class InterestProgramController {
 
     private final InterestProgramService interestProgramService;
 
     @Operation(summary = "관심공고 등록")
-    @PostMapping("/{programId}")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "등록 성공",
+                    content = @Content(schema = @Schema(implementation = InterestProgramResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "id": 1,
+                                      "programId": "PBLN000000000001",
+                                      "createdAt": "2026-09-28T16:00:00"
+                                    }
+                                    """))),
+            @ApiResponse(responseCode = "409", description = "이미 등록한 관심공고입니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "FAVORITE_ALREADY_EXISTS",
+                                      "message": "이미 등록한 관심공고입니다.",
+                                      "timestamp": "2026-09-28T16:00:00+09:00",
+                                      "path": "/api/favorites/PBLN000000000001",
+                                      "details": []
+                                    }
+                                    """)))
+    })
+    @PostMapping("/{pblancId}")
     public ResponseEntity<InterestProgramResponse> add(
             Authentication authentication,
-            @PathVariable String programId) {
+            @PathVariable("pblancId") String programId) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(interestProgramService.add(authentication.getName(), programId));
     }
@@ -41,8 +69,22 @@ public class InterestProgramController {
     }
 
     @Operation(summary = "관심공고 삭제")
-    @DeleteMapping("/{programId}")
-    public ResponseEntity<Void> delete(Authentication authentication, @PathVariable String programId) {
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "등록된 관심공고가 없습니다.",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(value = """
+                                    {
+                                      "code": "DATA_NOT_FOUND",
+                                      "message": "등록된 관심공고가 없습니다.",
+                                      "timestamp": "2026-09-28T16:00:00+09:00",
+                                      "path": "/api/favorites/PBLN000000000001",
+                                      "details": []
+                                    }
+                                    """)))
+    })
+    @DeleteMapping("/{pblancId}")
+    public ResponseEntity<Void> delete(Authentication authentication, @PathVariable("pblancId") String programId) {
         interestProgramService.delete(authentication.getName(), programId);
         return ResponseEntity.noContent().build();
     }

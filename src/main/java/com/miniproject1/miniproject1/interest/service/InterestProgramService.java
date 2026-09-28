@@ -21,7 +21,7 @@ public class InterestProgramService {
     @Transactional
     public InterestProgramResponse add(String email, String programId) {
         if (interestProgramRepository.existsByEmailAndProgramId(email, programId)) {
-            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "이미 등록한 관심공고입니다.");
+            throw new BusinessException(ErrorCode.FAVORITE_ALREADY_EXISTS);
         }
 
         try {
@@ -29,7 +29,7 @@ public class InterestProgramService {
                     InterestProgram.builder().email(email).programId(programId).build());
             return InterestProgramResponse.from(saved);
         } catch (DataIntegrityViolationException exception) {
-            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "이미 등록한 관심공고입니다.");
+            throw new BusinessException(ErrorCode.FAVORITE_ALREADY_EXISTS);
         }
     }
 

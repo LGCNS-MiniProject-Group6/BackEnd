@@ -23,7 +23,7 @@ public class SignupService {
     @Transactional
     public SignupResponseDTO signup(SignupRequestDTO request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "이미 가입된 이메일입니다.");
+            throw new BusinessException(ErrorCode.AUTH_EMAIL_DUPLICATED);
         }
 
         User user = User.builder()

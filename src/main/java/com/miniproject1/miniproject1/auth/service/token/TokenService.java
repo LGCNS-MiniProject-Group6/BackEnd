@@ -32,9 +32,7 @@ public class TokenService {
 
                 // 2. Refresh Token 자체 검증
                 if (!jwtTokenProvider.isRefreshToken(refreshToken)) {
-                        throw new BusinessException(
-                                        ErrorCode.INVALID_TOKEN,
-                                        "유효하지 않거나 만료된 Refresh Token입니다.");
+                        throw new BusinessException(ErrorCode.AUTH_REFRESH_TOKEN_INVALID);
                 }
 
                 // 3. Refresh Token에서 email 추출
@@ -51,9 +49,7 @@ public class TokenService {
                         // 기존 Refresh Token 폐기
                         redisTemplate.delete(redisKey);
 
-                        throw new BusinessException(
-                                        ErrorCode.INVALID_TOKEN,
-                                        "이미 사용되었거나 유효하지 않은 Refresh Token입니다.");
+                        throw new BusinessException(ErrorCode.AUTH_REFRESH_TOKEN_INVALID);
                 }
 
                 // 6. 새로운 Access Token 발급

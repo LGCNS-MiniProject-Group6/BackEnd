@@ -176,11 +176,10 @@ class LoginLogoutIntegrationTest {
     void accessTokenAuthenticatesProtectedApi() throws Exception {
         String accessToken = login().get("accessToken").asText();
 
-        mockMvc.perform(get("/protected")
+        mockMvc.perform(get("/api/auth/users/me")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("userEmail").value(EMAIL))
-                .andExpect(jsonPath("authorities").isEmpty());
+                .andExpect(jsonPath("email").value(EMAIL));
     }
 
     @Test
