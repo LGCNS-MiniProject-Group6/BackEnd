@@ -46,6 +46,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'com.h2database:h2'
 
     // 5. Validation, Swagger, JWT, env
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -69,6 +70,12 @@ dependencies {
     // 10. Spring AI
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // coolSms 
+    implementation 'net.nurigo:sdk:4.3.0'
+
+    // biziapi의 html 제거하기 위함
+    implementation 'org.jsoup:jsoup:1.17.2'
 }
 
 tasks.named('test') {
