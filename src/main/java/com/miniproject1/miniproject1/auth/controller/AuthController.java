@@ -4,14 +4,23 @@ import java.util.Map;
 
 import com.miniproject1.miniproject1.auth.dto.Token.TokenRequestDTO;
 import com.miniproject1.miniproject1.auth.dto.Token.TokenResponseDTO;
+import com.miniproject1.miniproject1.auth.dto.request.findemail.FindEmailSendCodeRequest;
+import com.miniproject1.miniproject1.auth.dto.request.findemail.FindEmailVerifyRequest;
+import com.miniproject1.miniproject1.auth.dto.request.password.PasswordResetRequest;
+import com.miniproject1.miniproject1.auth.dto.request.password.PasswordResetSendCodeRequest;
+import com.miniproject1.miniproject1.auth.dto.request.password.PasswordResetVerifyRequest;
 import com.miniproject1.miniproject1.auth.dto.login.LoginRequest;
 import com.miniproject1.miniproject1.auth.dto.login.LoginResponse;
 import com.miniproject1.miniproject1.auth.dto.logout.LogoutRequest;
+import com.miniproject1.miniproject1.auth.dto.response.findemail.FindEmailResponse;
+import com.miniproject1.miniproject1.auth.dto.response.password.PasswordResetTokenResponse;
 import com.miniproject1.miniproject1.auth.dto.signup.request.SignupRequestDTO;
 import com.miniproject1.miniproject1.auth.dto.signup.response.EmailCheckResponseDTO;
 import com.miniproject1.miniproject1.auth.dto.signup.response.SignupResponseDTO;
 import com.miniproject1.miniproject1.auth.service.login.LoginService;
+import com.miniproject1.miniproject1.auth.service.findemail.FindEmailService;
 import com.miniproject1.miniproject1.auth.service.logout.LogoutService;
+import com.miniproject1.miniproject1.auth.service.password.PasswordResetService;
 import com.miniproject1.miniproject1.auth.service.signup.EmailCheckService;
 import com.miniproject1.miniproject1.auth.service.signup.SignupService;
 import com.miniproject1.miniproject1.auth.service.sms.SmsService;
@@ -50,6 +59,8 @@ public class AuthController {
     private final LoginService loginService;
     private final TokenService tokenService;
     private final LogoutService logoutService;
+    private final FindEmailService findEmailService;
+    private final PasswordResetService passwordResetService;
 
     @Operation(summary = "1. 이메일 중복확인")
     @ApiResponses({
@@ -131,6 +142,41 @@ public class AuthController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@Valid @RequestBody LogoutRequest request) {
         logoutService.logout(request);
+    }
+
+    @Operation(summary = "8. 아이디 찾기 인증번호 발송")
+    @PostMapping("/find-email/send-code")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void sendFindEmailCode(@Valid @RequestBody FindEmailSendCodeRequest request) {
+        findEmailService.sendCode(request);
+    }
+
+    @Operation(summary = "9. 아이디 찾기 인증번호 검증")
+    @PostMapping("/find-email/verify")
+    public ResponseEntity<FindEmailResponse> verifyFindEmail(
+            @Valid @RequestBody FindEmailVerifyRequest request) {
+        return ResponseEntity.ok(findEmailService.verify(request));
+    }
+
+    @Operation(summary = "10. 비밀번호 재설정 인증번호 발송")
+    @PostMapping("/password-reset/send-code")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void sendPasswordResetCode(@Valid @RequestBody PasswordResetSendCodeRequest request) {
+        passwordResetService.sendCode(request);
+    }
+
+    @Operation(summary = "11. 비밀번호 재설정 인증번호 검증")
+    @PostMapping("/password-reset/verify")
+    public ResponseEntity<PasswordResetTokenResponse> verifyPasswordResetCode(
+            @Valid @RequestBody PasswordResetVerifyRequest request) {
+        return ResponseEntity.ok(passwordResetService.verifyCode(request));
+    }
+
+    @Operation(summary = "12. 비밀번호 재설정")
+    @PostMapping("/password-reset")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void resetPassword(@Valid @RequestBody PasswordResetRequest request) {
+        passwordResetService.reset(request);
     }
 
 
