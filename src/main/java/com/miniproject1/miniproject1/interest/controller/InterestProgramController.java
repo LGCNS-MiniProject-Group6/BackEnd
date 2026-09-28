@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Interest", description = "관심공고 관리 API")
+@Tag(name = "Favorites", description = "관심공고 관리 API")
 @RestController
 @RequestMapping("/api/favorites")
 @RequiredArgsConstructor
