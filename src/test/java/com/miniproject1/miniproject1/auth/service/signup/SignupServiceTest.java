@@ -70,7 +70,7 @@ class SignupServiceTest {
         BusinessException exception = catchThrowableOfType(
                 BusinessException.class, () -> signupService.signup(request));
 
-        assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.DUPLICATE_RESOURCE);
+        assertThat(exception.getErrorCode()).isEqualTo(ErrorCode.AUTH_EMAIL_DUPLICATED);
         verify(userRepository, never()).save(any(User.class));
     }
 }

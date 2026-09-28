@@ -27,6 +27,11 @@ coolsms:
     coolSmsSecret: test-secret
     coolSmsNumber: 01000000000
 
+biziinfo:
+  api:
+    url: https://example.invalid
+    key: test-key
+
 logging:
   level:
     root: WARN
