@@ -26,6 +26,7 @@ public enum ErrorCode {
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "DATA_NOT_FOUND", "요청한 데이터를 찾을 수 없습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER_NOT_FOUND", "존재하지 않는 사용자입니다."),
     BUSINESS_INFO_NOT_FOUND(HttpStatus.NOT_FOUND, "BUSINESS_INFO_NOT_FOUND", "등록된 사업 정보가 없습니다."),
+    PROGRAM_NOT_FOUND(HttpStatus.NOT_FOUND, "PROGRAM_NOT_FOUND", "존재하지 않는 공고입니다."),
 
     // 409 Conflict
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "DUPLICATE_RESOURCE", "이미 존재하는 데이터이거나 상태 충돌이 발생했습니다."),
