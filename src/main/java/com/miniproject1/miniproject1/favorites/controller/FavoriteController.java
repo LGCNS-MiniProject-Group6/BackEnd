@@ -1,8 +1,8 @@
-package com.miniproject1.miniproject1.interest.controller;
+package com.miniproject1.miniproject1.favorites.controller;
 
 import com.miniproject1.miniproject1.commons.exception.ErrorResponse;
-import com.miniproject1.miniproject1.interest.dto.response.InterestProgramResponse;
-import com.miniproject1.miniproject1.interest.service.InterestProgramService;
+import com.miniproject1.miniproject1.favorites.dto.response.FavoriteResponse;
+import com.miniproject1.miniproject1.favorites.service.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -27,14 +27,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/favorites")
 @RequiredArgsConstructor
-public class InterestProgramController {
+public class FavoriteController {
 
-    private final InterestProgramService interestProgramService;
+    private final FavoriteService favoriteService;
 
     @Operation(summary = "관심공고 등록")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "등록 성공",
-                    content = @Content(schema = @Schema(implementation = InterestProgramResponse.class),
+                    content = @Content(schema = @Schema(implementation = FavoriteResponse.class),
                             examples = @ExampleObject(value = """
                                     {
                                       "id": 1,
@@ -55,17 +55,17 @@ public class InterestProgramController {
                                     """)))
     })
     @PostMapping("/{pblancId}")
-    public ResponseEntity<InterestProgramResponse> add(
+    public ResponseEntity<FavoriteResponse> add(
             Authentication authentication,
             @PathVariable("pblancId") String programId) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(interestProgramService.add(authentication.getName(), programId));
+                .body(favoriteService.add(authentication.getName(), programId));
     }
 
     @Operation(summary = "내 관심공고 조회")
     @GetMapping
-    public ResponseEntity<List<InterestProgramResponse>> findAll(Authentication authentication) {
-        return ResponseEntity.ok(interestProgramService.findAll(authentication.getName()));
+    public ResponseEntity<List<FavoriteResponse>> findAll(Authentication authentication) {
+        return ResponseEntity.ok(favoriteService.findAll(authentication.getName()));
     }
 
     @Operation(summary = "관심공고 삭제")
@@ -85,7 +85,7 @@ public class InterestProgramController {
     })
     @DeleteMapping("/{pblancId}")
     public ResponseEntity<Void> delete(Authentication authentication, @PathVariable("pblancId") String programId) {
-        interestProgramService.delete(authentication.getName(), programId);
+        favoriteService.delete(authentication.getName(), programId);
         return ResponseEntity.noContent().build();
     }
 }
