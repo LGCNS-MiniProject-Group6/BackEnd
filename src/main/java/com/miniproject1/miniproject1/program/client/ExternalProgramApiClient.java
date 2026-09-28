@@ -28,7 +28,6 @@ public class ExternalProgramApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
 
-    // ★ 오타 수정: 닫는 중괄호 '}' 추가
     @Value("${biziinfo.api.url}")
     private String apiUrl;
 
@@ -36,7 +35,7 @@ public class ExternalProgramApiClient {
     private String apiKey;
 
     public List<ProgramApiDTO> fetchProgramsFromOpenApi() {
-        log.info("[OpenAPI Client] 기업마당 API 임시 수집 시작 (Target URL: {})", apiUrl);
+        log.info("[OpenAPI Client] 기업마당 API 임시 수집 시작 (최대 10개)");
         List<ProgramApiDTO> resultList = new ArrayList<>();
 
         try {
@@ -47,11 +46,8 @@ public class ExternalProgramApiClient {
                     .toUri();
 
             HttpHeaders headers = new HttpHeaders();
-
-            // ★ Null type safety 경고 해결: MediaType.APPLICATION_JSON 정적 객체 직접 주입
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
             HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
             ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, requestEntity, String.class);
@@ -70,10 +66,13 @@ public class ExternalProgramApiClient {
             }
 
             if (targetArrayNode.isArray()) {
+                int count = 0;
                 for (JsonNode node : targetArrayNode) {
+
                     try {
                         ProgramApiDTO dto = objectMapper.treeToValue(node, ProgramApiDTO.class);
                         resultList.add(dto);
+                        count++;
                     } catch (BusinessException e) {
                         log.warn("[OpenAPI Client] 공고 데이터 검증/날짜 파싱 실패로 스킵 - pblancId: {}, 사유: {}",
                                 node.path("pblancId").asText(), e.getMessage());
@@ -84,7 +83,7 @@ public class ExternalProgramApiClient {
                 }
             }
 
-            log.info("[OpenAPI Client] 총 {}건의 공고 파싱 완료", resultList.size());
+            log.info("[OpenAPI Client] 총 {}건의 공고 파싱 완료 (임시 제한 10개)", resultList.size());
 
         } catch (Exception e) {
             log.error("[OpenAPI Client] 외부 API 수집 중 네트워크/파싱 오류 발생: {}", e.getMessage(), e);
