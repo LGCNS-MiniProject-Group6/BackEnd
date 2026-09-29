@@ -1,0 +1,33 @@
+:root {
+  --color-primary: #51409a;
+  --color-primary-dark: #19162f;
+  --color-primary-soft: #f0eef8;
+  --color-background: #f6f6f2;
+  --color-surface: #ffffff;
+  --color-border: #e2e1dc;
+  --color-border-strong: #c9c7c0;
+  --color-text: #19191f;
+  --color-text-muted: #6d6c73;
+  --color-success: #18894b;
+  --color-success-soft: #eaf7ef;
+  --color-warning: #a86800;
+  --color-warning-soft: #fff5d8;
+  --color-danger: #d23939;
+  --color-danger-soft: #fff0ee;
+  --shadow-card: 0 24px 70px rgba(30, 27, 50, 0.09);
+  --shadow-soft: 0 8px 26px rgba(30, 27, 50, 0.06);
+  --radius-small: 7px;
+  --radius-medium: 12px;
+  --radius-large: 22px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --content-width: 1240px;
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-sans: Pretendard, 'Noto Sans KR', 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+}

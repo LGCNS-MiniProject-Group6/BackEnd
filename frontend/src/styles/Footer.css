@@ -1,0 +1,131 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell > main {
+  flex: 1;
+}
+
+.site-footer {
+  width: 100%;
+  margin-top: 64px;
+  background: #ffffff;
+  border-top: 1px solid #e7e5ee;
+  color: #6b6a75;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.site-footer__inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 24px 32px;
+}
+
+.site-footer__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #efedf3;
+}
+
+.site-footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.site-footer__logo img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.site-footer__logo strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1f1d2b;
+}
+
+.site-footer__brand p {
+  margin: 6px 0 0;
+  color: #8a8894;
+  font-size: 13px;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 24px;
+}
+
+.site-footer__links a {
+  color: #55535f;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.site-footer__links a:hover {
+  color: #4b3f9b;
+}
+
+.site-footer__links a.is-strong {
+  color: #1f1d2b;
+  font-weight: 700;
+}
+
+.site-footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 20px;
+  font-size: 13px;
+}
+
+.site-footer__info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin: 0;
+  font-style: normal;
+}
+
+.site-footer__info span + span {
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid #dddae4;
+}
+
+.site-footer__info a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-footer__info a:hover {
+  color: #4b3f9b;
+  text-decoration: underline;
+}
+
+.site-footer__copy {
+  margin: 0;
+  color: #9a98a3;
+}
+
+@media (max-width: 768px) {
+  .site-footer__top,
+  .site-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .site-footer__links {
+    justify-content: flex-start;
+    gap: 8px 16px;
+  }
+}

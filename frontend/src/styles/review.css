@@ -1,0 +1,66 @@
+body:has(.review-page-container) { overflow-x: clip; }
+
+.review-page-container {
+  --content-width: 1320px;
+  --review-sticky-top: 90px;
+  --review-sticky-bottom-gap: 24px;
+}
+.page-heading--review { margin-bottom: 26px; }
+.review-layout { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(320px, 0.9fr); gap: 26px; align-items: start; }
+.review-content { min-width: 0; }
+.review-summary { padding: 30px; border: 1px solid #ecc568; border-radius: var(--radius-medium); background: #fff9e8; }
+.review-summary__eyebrow { display: flex; justify-content: space-between; align-items: center; gap: 16px; color: var(--color-warning); font-size: 0.82rem; font-weight: 800; }
+.review-summary h2 { margin: 16px 0 8px; color: #805000; font-size: 1.65rem; }
+.review-summary > p { color: #786b52; }
+.review-summary__counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+.review-summary__counts div { display: grid; gap: 5px; padding: 14px; border: 1px solid #efd07d; border-radius: 10px; background: rgba(255,255,255,0.7); }
+.review-summary__counts span { color: #85775d; font-size: 0.78rem; }
+.review-summary__counts strong { font-size: 1.35rem; }
+.review-section { margin-top: 30px; }
+.condition-list { display: grid; gap: 12px; }
+.condition-card { padding: 20px; }
+.condition-card__title { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.condition-card dl { display: grid; grid-template-columns: 0.75fr 0.9fr 1.6fr; gap: 22px; }
+.condition-card dt { color: var(--color-text-muted); font-size: 0.75rem; font-weight: 750; }
+.condition-card dd { margin-top: 4px; color: #526178; font-size: 0.87rem; }
+.review-notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+.review-note { padding: 22px; }
+.review-note--warning { border-color: #efc6b2; background: #fff8f4; }
+.review-note--info { border-color: #bdd3f5; background: #f5f9ff; }
+.review-note h2 { margin-bottom: 12px; font-size: 1.05rem; }
+.review-note ul { padding-left: 20px; color: #526178; font-size: 0.88rem; }
+.review-note li + li { margin-top: 5px; }
+.review-disclaimer { margin-top: 20px; padding: 14px 16px; border-left: 3px solid var(--color-border-strong); color: var(--color-text-muted); font-size: 0.84rem; }
+.review-actions { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 12px; margin-top: 20px; }
+
+.chat-panel { position: sticky; top: var(--review-sticky-top); align-self: start; display: flex; flex-direction: column; width: 100%; height: calc(100vh - var(--review-sticky-top) - var(--review-sticky-bottom-gap)); height: min(720px, calc(100dvh - var(--review-sticky-top) - var(--review-sticky-bottom-gap))); min-height: 0; max-height: calc(100vh - var(--review-sticky-top) - var(--review-sticky-bottom-gap)); max-height: calc(100dvh - var(--review-sticky-top) - var(--review-sticky-bottom-gap)); overflow: hidden; border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: white; box-shadow: var(--shadow-soft); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+.chat-panel__header { flex: 0 0 auto; padding: 22px; border-bottom: 1px solid var(--color-border); }
+.chat-panel__header > div { display: flex; justify-content: space-between; align-items: center; }
+.chat-panel__header h2 { font-size: 1.25rem; }
+.chat-panel__header > p { margin: 8px 0 4px; font-size: 0.86rem; font-weight: 700; }
+.chat-panel__header small { color: var(--color-text-muted); }
+.chat-panel__suggestions { flex: 0 0 auto; padding: 16px 18px; border-bottom: 1px solid var(--color-border); }
+.chat-panel__suggestions strong { display: block; margin-bottom: 9px; font-size: 0.77rem; }
+.chat-panel__suggestions > div { display: flex; flex-wrap: wrap; gap: 7px; }
+.chat-panel__suggestions button { padding: 7px 10px; border: 1px solid #bdd1f4; border-radius: 999px; color: var(--color-primary); background: #f5f9ff; font-size: 0.75rem; font-weight: 700; }
+.chat-panel__messages { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding: 18px; background: #f7f9fc; -webkit-overflow-scrolling: touch; }
+.chat-message { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 14px; }
+.chat-message p { max-width: 85%; padding: 12px 14px; border: 1px solid var(--color-border); border-radius: 14px 14px 14px 4px; color: #526178; background: white; font-size: 0.86rem; }
+.chat-message__avatar { display: grid; place-items: center; flex: 0 0 26px; height: 26px; border-radius: 50%; color: white; background: var(--color-primary); font-size: 0.65rem; font-weight: 900; }
+.chat-message--user { justify-content: flex-end; }
+.chat-message--user p { color: white; border-color: var(--color-primary); border-radius: 14px 14px 4px 14px; background: var(--color-primary); }
+.chat-panel__composer { display: grid; flex: 0 0 auto; grid-template-columns: 1fr auto; gap: 8px; padding: 14px; border-top: 1px solid var(--color-border); background: white; }
+.chat-panel__composer input { min-width: 0; min-height: 44px; padding: 0 12px; border: 1px solid var(--color-border-strong); border-radius: 9px; outline: 0; }
+.chat-panel__composer .button { min-width: 44px; min-height: 44px; padding: 0; }
+
+@media (max-width: 1000px) {
+  .review-layout { grid-template-columns: 1fr; }
+  .chat-panel { position: static; height: min(680px, 78dvh); min-height: 480px; max-height: none; }
+}
+
+@media (max-width: 680px) {
+  .review-summary__counts, .condition-card dl, .review-notes-grid, .review-actions { grid-template-columns: 1fr; }
+  .condition-card dl { gap: 14px; }
+  .review-summary { padding: 22px; }
+  .chat-panel { height: min(640px, 75dvh); min-height: 500px; }
+}
