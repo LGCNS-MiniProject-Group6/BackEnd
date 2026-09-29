@@ -5,9 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
@@ -51,9 +54,12 @@ public class Program {
     @Column(name = "pblanc_url", length = 1000)
     private String pblancUrl;
 
-    // ★ 1. DB 컬럼 추가
     @Column(name = "print_file_path_url", length = 1000)
     private String printFilePathUrl;
+
+    // ★ 추가된 부분: AiSummary 1:1 양방향 매핑 (ProgramRepository로 통합 조회를 위함)
+    @OneToOne(mappedBy = "program", fetch = FetchType.LAZY)
+    private AiSummary aiSummary;
 
     @Builder
     public Program(String pblancId, String title, String category, String organization,
@@ -85,6 +91,6 @@ public class Program {
         this.applyEndDate = updated.getApplyEndDate();
         this.apiUpdatedAt = updated.getApiUpdatedAt();
         this.pblancUrl = updated.getPblancUrl();
-        this.printFilePathUrl = updated.getPrintFilePathUrl(); // ★ 3. 동기화 시 업데이트되는 핵심 지점!
+        this.printFilePathUrl = updated.getPrintFilePathUrl();
     }
 }

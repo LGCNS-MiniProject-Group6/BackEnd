@@ -232,7 +232,21 @@ CREATE TABLE program_documents (
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_unicode_ci;
 
-
+-- ==========================
+-- AI 공고문 요약 테이블 
+-- ==========================
+CREATE TABLE ai_summary (
+    pblanc_id VARCHAR(255) NOT NULL COMMENT '공고 ID (FK, PK)',
+    biz_summary TEXT COMMENT '사업개요',
+    target_description TEXT COMMENT '지원대상',
+    support_content TEXT COMMENT '지원내용',
+    apply_method TEXT COMMENT '신청방법',
+    required_documents TEXT COMMENT '준비서류',
+    contact_info TEXT COMMENT '문의처',
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '최종 수정일시',
+    PRIMARY KEY (pblanc_id),
+    CONSTRAINT fk_ai_summary_program FOREIGN KEY (pblanc_id) REFERENCES programs (pblanc_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='AI 생성 공고 요약 정보';
 -- =====================================================
 -- 6. AI 신청 전 검수 및 이력
 -- 검수 상태: MATCHED / UNMATCHED / NEED_CHECK
