@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -52,6 +53,18 @@ public class GlobalExceptionHandler {
 
                 ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI(),
                                 details);
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        /**
+         * JSON 본문 형식이 잘못되었거나 필수 구조를 읽을 수 없는 경우 (400 Bad Request)
+         */
+        @ExceptionHandler(HttpMessageNotReadableException.class)
+        protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+                        HttpMessageNotReadableException e, HttpServletRequest request) {
+                log.warn("HttpMessageNotReadableException: {}", e.getMessage());
+                ErrorResponse response = ErrorResponse.of(
+                                ErrorCode.INVALID_INPUT_VALUE, request.getRequestURI());
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
