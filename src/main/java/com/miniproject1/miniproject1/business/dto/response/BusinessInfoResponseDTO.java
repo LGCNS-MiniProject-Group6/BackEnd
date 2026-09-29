@@ -17,6 +17,7 @@ public class BusinessInfoResponseDTO {
     private String industry;
     private String region;
     private LocalDate openingDate;
+    private String businessType;
     private Integer employeeCount;
     private Long annualRevenue;
     private Boolean isDefault;
@@ -30,6 +31,7 @@ public class BusinessInfoResponseDTO {
                 .industry(businessInfo.getIndustry())
                 .region(businessInfo.getRegion())
                 .openingDate(businessInfo.getOpeningDate())
+                .businessType(businessInfo.getBusinessType())
                 .employeeCount(businessInfo.getEmployeeCount())
                 .annualRevenue(businessInfo.getAnnualRevenue())
                 .isDefault(businessInfo.getIsDefault())

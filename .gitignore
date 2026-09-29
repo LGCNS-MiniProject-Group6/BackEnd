@@ -44,3 +44,9 @@ db_document_codingRule
 
 *.log
 logs/
+
+### macOS ###
+.DS_Store
+
+### local DB dump ###
+database/
