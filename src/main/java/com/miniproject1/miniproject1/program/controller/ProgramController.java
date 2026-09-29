@@ -1,8 +1,10 @@
 package com.miniproject1.miniproject1.program.controller;
 
 import com.miniproject1.miniproject1.program.dto.response.ProgramDetailResponseDTO;
+import com.miniproject1.miniproject1.program.dto.response.ProgramRecommendationResponseDTO;
 import com.miniproject1.miniproject1.program.dto.response.ProgramResponseDTO;
 import com.miniproject1.miniproject1.program.service.ProgramReadService;
+import com.miniproject1.miniproject1.program.service.ProgramRecommendationService;
 import com.miniproject1.miniproject1.program.service.ProgramSyncService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Program", description = "지원사업 공고 수집, 동기화 및 조회 API")
@@ -24,6 +27,7 @@ public class ProgramController {
 
     private final ProgramSyncService programSyncService;
     private final ProgramReadService programReadService;
+    private final ProgramRecommendationService programRecommendationService;
 
     @Operation(summary = "PROGRAM-01 공고 통합 검색 및 목록 조회", description = "제목, 카테고리, 기관, 지원대상, 사업내용 필드를 대상으로 통합 검색 및 페이징 목록 조회를 수행합니다.")
     @GetMapping
@@ -40,6 +44,20 @@ public class ProgramController {
     public ResponseEntity<ProgramDetailResponseDTO> getProgramDetail(
             @Parameter(description = "공고 식별자 ID", example = "PBLN_000000000092578") @PathVariable(name = "pblancId") String pblancId) {
         ProgramDetailResponseDTO response = programReadService.getProgramDetail(pblancId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "PROGRAM-04 AI 맞춤 추천", description = "대표 카테고리(경영/기술/금융/수출/인력/내수/창업/기타) 내에서, 로그인한 사용자의 AI 검수 이력을 점수화하여 추천순으로 정렬한 공고 목록을 반환합니다.")
+    @GetMapping("/recommendations")
+    public ResponseEntity<Page<ProgramRecommendationResponseDTO>> getRecommendations(
+            Authentication authentication,
+            @RequestParam(name = "category") String category,
+            @RequestParam(name = "region", required = false) String region,
+            @RequestParam(name = "businessType", required = false) String businessType,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @ParameterObject @PageableDefault(size = 10) Pageable pageable) {
+        Page<ProgramRecommendationResponseDTO> response = programRecommendationService.recommend(
+                authentication.getName(), category, region, businessType, keyword, pageable);
         return ResponseEntity.ok(response);
     }
 

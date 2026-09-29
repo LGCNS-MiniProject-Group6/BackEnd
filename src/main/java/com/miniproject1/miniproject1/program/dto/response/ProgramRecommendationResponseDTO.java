@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Getter;
 
-/** AI 조건 점수순으로 정렬된 추천 공고 응답입니다. */
+/** AI가 사업정보와 공고 요약을 비교해 적합도 순으로 정렬한 추천 공고 응답입니다. */
 @Getter
 @Builder
 public class ProgramRecommendationResponseDTO {
@@ -24,9 +24,10 @@ public class ProgramRecommendationResponseDTO {
     private String pblancUrl;
     private AiReviewStatus reviewStatus;
     private Integer recommendationScore;
+    private String matchReason;
 
     public static ProgramRecommendationResponseDTO from(
-            Program program, AiReviewStatus reviewStatus, Integer recommendationScore) {
+            Program program, AiReviewStatus reviewStatus, Integer recommendationScore, String matchReason) {
         return ProgramRecommendationResponseDTO.builder()
                 .pblancId(program.getPblancId())
                 .title(program.getTitle())
@@ -41,6 +42,7 @@ public class ProgramRecommendationResponseDTO {
                 .pblancUrl(program.getPblancUrl())
                 .reviewStatus(reviewStatus)
                 .recommendationScore(recommendationScore)
+                .matchReason(matchReason)
                 .build();
     }
 }

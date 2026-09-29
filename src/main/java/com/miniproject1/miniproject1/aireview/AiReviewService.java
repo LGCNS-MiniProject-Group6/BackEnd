@@ -45,7 +45,6 @@ public class AiReviewService {
     private static final int MAX_ITEMS = 50;
     private static final int MAX_CONDITION_LENGTH = 100;
     private static final int MAX_TEXT_LENGTH = 2_000;
-    private static final String REQUIREMENT_CHECK = "공고 요건 확인";
     private static final ZoneId REVIEW_ZONE = ZoneId.of("Asia/Seoul");
     private static final Pattern WHITESPACE = Pattern.compile("\\s+");
     private static final Pattern TOKEN_DELIMITER = Pattern.compile("[\\s,.():;·/‧、]+");
@@ -244,14 +243,16 @@ public class AiReviewService {
         for (Condition condition : analysis.conditions()) {
             sanitizedConditions.add(validateCondition(condition, allowedUserValues, originalText));
         }
-        for (GroundedText warning : analysis.warnings()) {
-            validateGroundedText(warning, originalText);
-        }
-        for (GroundedText document : analysis.documents()) {
-            validateGroundedText(document, originalText);
-        }
+        // 근거가 원문과 어긋나는 개별 warning/document만 조용히 제외하고, 그 이유로 검수 전체를
+        // 실패시키지 않습니다(조건 판정과 달리 참고 정보이므로 안전하게 생략할 수 있습니다).
+        List<GroundedText> sanitizedWarnings = analysis.warnings().stream()
+                .filter(warning -> isGroundedText(warning, originalText))
+                .toList();
+        List<GroundedText> sanitizedDocuments = analysis.documents().stream()
+                .filter(document -> isGroundedText(document, originalText))
+                .toList();
 
-        return new AiReviewAnalysis(sanitizedConditions, analysis.warnings(), analysis.documents());
+        return new AiReviewAnalysis(sanitizedConditions, sanitizedWarnings, sanitizedDocuments);
     }
 
     /**
@@ -280,13 +281,12 @@ public class AiReviewService {
         }
 
         if (condition.evidence() == null) {
-            boolean validUnknownRequirement = condition.status() == AiReviewStatus.NEED_CHECK
-                    && REQUIREMENT_CHECK.equals(condition.condition())
-                    && condition.userValue() == null
-                    && condition.requirement() == null;
-            if (!validUnknownRequirement) {
-                log.warn("evidence 없이 NEED_CHECK/공고 요건 확인 형태가 아닌 조건입니다: condition={}", condition);
-                throw invalidResponse();
+            // MATCHED/UNMATCHED는 반드시 원문 근거가 있어야 하지만, 모델이 근거 없이 단정하는 경우도
+            // 종종 있습니다. 검수 전체를 실패시키는 대신, 근거가 원문과 어긋나는 경우와 동일하게
+            // NEED_CHECK로 안전하게 강등합니다.
+            if (condition.status() != AiReviewStatus.NEED_CHECK) {
+                log.warn("evidence 없이 MATCHED/UNMATCHED로 응답되어 NEED_CHECK로 강등합니다: condition={}", condition);
+                return new Condition(condition.condition(), AiReviewStatus.NEED_CHECK, null, null, null, null);
             }
             return condition;
         }
@@ -309,14 +309,15 @@ public class AiReviewService {
         return condition;
     }
 
-    private void validateGroundedText(GroundedText value, String originalText) {
-        if (value == null
-                || !hasText(value.text(), MAX_TEXT_LENGTH)
-                || !hasText(value.evidence(), MAX_TEXT_LENGTH)
-                || !containsEvidence(originalText, value.evidence())) {
-            log.warn("주의사항/제출서류 근거가 공고 원문에서 확인되지 않습니다: value={}", value);
-            throw invalidResponse();
+    private boolean isGroundedText(GroundedText value, String originalText) {
+        boolean grounded = value != null
+                && hasText(value.text(), MAX_TEXT_LENGTH)
+                && hasText(value.evidence(), MAX_TEXT_LENGTH)
+                && containsEvidence(originalText, value.evidence());
+        if (!grounded) {
+            log.warn("주의사항/제출서류 근거가 공고 원문에서 확인되지 않아 제외합니다: value={}", value);
         }
+        return grounded;
     }
 
     /** UNMATCHED가 우선이며, 그다음 NEED_CHECK, 모두 충족한 경우 MATCHED입니다. */
