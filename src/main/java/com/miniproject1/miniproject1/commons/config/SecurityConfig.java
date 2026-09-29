@@ -59,6 +59,7 @@ public class SecurityConfig {
                                                 .requestMatchers(HttpMethod.POST, "/api/programs/*/chat").authenticated()
                                                 .requestMatchers("/api/auth/users/**").authenticated()
                                                 .requestMatchers("/api/favorites/**").authenticated()
+                                                .requestMatchers("/api/reviews/**").authenticated()
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 .anyRequest().permitAll());
 
