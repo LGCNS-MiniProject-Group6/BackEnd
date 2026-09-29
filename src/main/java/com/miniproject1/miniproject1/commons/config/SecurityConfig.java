@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -55,6 +56,7 @@ public class SecurityConfig {
                                                                 "/api/signup/**",
                                                                 "/error")
                                                 .permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/api/programs/*/chat").authenticated()
                                                 .requestMatchers("/api/auth/users/**").authenticated()
                                                 .requestMatchers("/api/favorites/**").authenticated()
                                                 .requestMatchers("/api/reviews/**").authenticated()

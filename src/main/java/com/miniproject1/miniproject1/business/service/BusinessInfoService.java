@@ -30,6 +30,7 @@ public class BusinessInfoService {
                                         .industry(request.getIndustry())
                                         .region(request.getRegion())
                                         .openingDate(request.getOpeningDate())
+                                        .businessType(request.getBusinessType())
                                         .employeeCount(request.getEmployeeCount())
                                         .annualRevenue(request.getAnnualRevenue())
                                         .build();

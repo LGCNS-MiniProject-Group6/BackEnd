@@ -44,6 +44,9 @@ public enum ErrorCode {
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버 내부 오류가 발생했습니다."),
 
+    // 503 Service Unavailable
+    AI_SERVICE_NOT_CONFIGURED(HttpStatus.SERVICE_UNAVAILABLE, "AI_SERVICE_NOT_CONFIGURED", "AI 서비스 설정이 완료되지 않았습니다."),
+
     // 502 Bad Gateway / 504 Gateway Timeout
     EXTERNAL_API_ERROR(HttpStatus.BAD_GATEWAY, "EXTERNAL_API_ERROR", "외부 API 연동 중 오류가 발생했습니다."),
     EXTERNAL_API_TIMEOUT(HttpStatus.GATEWAY_TIMEOUT, "EXTERNAL_API_TIMEOUT", "외부 API 또는 AI 응답 시간이 초과되었습니다.");

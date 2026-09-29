@@ -52,6 +52,9 @@ public class BusinessInfo {
     @Column(name = "opening_date", nullable = false)
     private LocalDate openingDate;
 
+    @Column(name = "business_type", length = 20, nullable = false)
+    private String businessType;
+
     @Column(name = "employee_count", nullable = false)
     private Integer employeeCount;
     
@@ -73,6 +76,7 @@ public class BusinessInfo {
     this.industry = request.getIndustry();
     this.region = request.getRegion();
     this.openingDate = request.getOpeningDate();
+    this.businessType = request.getBusinessType();
     this.employeeCount = request.getEmployeeCount();
     this.annualRevenue = request.getAnnualRevenue();
     }
