@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 public interface ProgramRepository extends JpaRepository<Program, String> {
 
@@ -38,4 +39,25 @@ public interface ProgramRepository extends JpaRepository<Program, String> {
             "LOWER(p.targetDescription) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Program> searchIntegrated(@Param("keyword") String keyword, Pageable pageable);
+
+    /** 추천 후보: 대표 카테고리와 선택 필터를 적용한 신청 가능 공고입니다. */
+    @Query("SELECT p FROM Program p WHERE " +
+            "p.category IN :categories " +
+            "AND (p.applyEndDate IS NULL OR p.applyEndDate >= :today) " +
+            "AND (:keyword IS NULL OR :keyword = '' OR " +
+            "LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(p.targetDescription) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:region IS NULL OR :region = '' OR " +
+            "LOWER(p.targetDescription) LIKE LOWER(CONCAT('%', :region, '%')) OR " +
+            "LOWER(p.description) LIKE LOWER(CONCAT('%', :region, '%'))) " +
+            "AND (:businessType IS NULL OR :businessType = '' OR " +
+            "LOWER(p.targetDescription) LIKE LOWER(CONCAT('%', :businessType, '%')) OR " +
+            "LOWER(p.description) LIKE LOWER(CONCAT('%', :businessType, '%')))")
+    List<Program> findRecommendationCandidates(
+            @Param("categories") List<String> categories,
+            @Param("today") LocalDate today,
+            @Param("keyword") String keyword,
+            @Param("region") String region,
+            @Param("businessType") String businessType);
 }
