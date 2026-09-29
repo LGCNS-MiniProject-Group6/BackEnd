@@ -63,7 +63,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
 
     // 8. OPEN AI + GPT AI
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
     implementation 'org.springframework.ai:spring-ai-starter-mcp-server-webmvc'
 	implementation 'org.springframework.ai:spring-ai-starter-mcp-client'
 
