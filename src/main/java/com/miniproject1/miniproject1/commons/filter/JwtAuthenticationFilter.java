@@ -54,6 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * 요청 경로가 화이트리스트에 포함되는지 확인합니다.
      */
     public boolean isPath(String path) {
+        // 공고 조회 API는 공개 상태를 유지하되 CHAT-01은 Access Token을 검증합니다.
+        if (matcher.match("/api/programs/*/chat", path)) {
+            return false;
+        }
         return WHITE_LIST.stream()
                 .anyMatch(pattern -> matcher.match(pattern, path));
     }

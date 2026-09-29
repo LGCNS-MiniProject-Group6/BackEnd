@@ -66,10 +66,10 @@ spring:
       timeout: 6000ms
   ai:
     openai:
-      api-key: ${OPEN_AI_KEY}
+      api-key: ${OPEN_AI_KEY:}
       chat:
         options:
-          model: ${OPEN_AI_MODEL}
+          model: ${OPEN_AI_MODEL:gpt-4o-mini}
 
 
 # mybatis:
