@@ -28,8 +28,8 @@ public class ProgramApiDTO {
     @JsonProperty("pblancNm")
     private String title;
 
-    @JsonProperty("pldirSportRealmLclasCodeNm")
-    @JsonAlias({ "lcategory", "pldirSportRealmMlsfcCodeNm", "categoryNm" })
+    @JsonProperty("category") // 1. 프론트엔드로 응답할 때 JSON 키 이름
+    @JsonAlias("pldirSportRealmLclasCodeNm") // 2. 공공 API에서 수신할 때 키 이름 (대분류만 지정)
     private String category;
 
     @JsonProperty("jrsdInsttNm")

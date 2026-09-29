@@ -41,9 +41,10 @@ public class ProgramReadService {
     }
 
     // 2. 하단 공고 목록 통합 검색 (키워드 미입력 시 전체 목록 조회)
-    public Page<ProgramResponseDTO> searchPrograms(String keyword, Pageable pageable) {
+    public Page<ProgramResponseDTO> searchPrograms(String keyword, String category, Pageable pageable) {
         String cleanKeyword = (keyword != null) ? keyword.trim() : "";
-        return programRepository.searchIntegrated(cleanKeyword, pageable)
+        String cleanCategory = (category != null) ? category.trim() : "";
+        return programRepository.searchIntegrated(cleanKeyword, cleanCategory, pageable)
                 .map(ProgramResponseDTO::from);
     }
 

@@ -29,8 +29,9 @@ public class ProgramController {
     @GetMapping
     public ResponseEntity<Page<ProgramResponseDTO>> getPrograms(
             @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "category", required = false) String category,
             @ParameterObject @PageableDefault(size = 10, sort = "applyStartDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ProgramResponseDTO> response = programReadService.searchPrograms(keyword, pageable);
+        Page<ProgramResponseDTO> response = programReadService.searchPrograms(keyword, category, pageable);
         return ResponseEntity.ok(response);
     }
 
