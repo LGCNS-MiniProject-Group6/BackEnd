@@ -93,4 +93,9 @@ public class Program {
         this.pblancUrl = updated.getPblancUrl();
         this.printFilePathUrl = updated.getPrintFilePathUrl();
     }
+
+    // 기존 카테고리 수정용 test 진행.
+    public void updateCategory(String category) {
+        this.category = category;
+    }
 }
