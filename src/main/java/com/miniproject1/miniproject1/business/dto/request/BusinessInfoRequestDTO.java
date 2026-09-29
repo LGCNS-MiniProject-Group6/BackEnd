@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 
@@ -21,6 +22,11 @@ public class BusinessInfoRequestDTO {
     @Schema (description = "개업일", example = "2026-09-22")
     @NotNull (message = "개업일은 필수입니다.")
     private LocalDate openingDate;
+
+    @Schema (description = "사업자 유형", example = "개인사업자", allowableValues = {"개인사업자", "법인사업자"})
+    @NotBlank (message = "사업자 유형은 필수입니다.")
+    @Pattern (regexp = "개인사업자|법인사업자", message = "사업자 유형은 개인사업자 또는 법인사업자여야 합니다.")
+    private String businessType;
 
     @Schema (description = "직원 수", example = "5")
     @NotNull (message = "직원 수는 필수입니다.")
